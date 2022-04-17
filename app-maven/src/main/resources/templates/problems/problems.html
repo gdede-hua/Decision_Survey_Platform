@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<header th:replace="fragments/header.html :: header"> </header>
+<body>
+	<div class="wrapper">
+		<!-- Sidebar  -->
+		<nav th:replace="fragments/sidebar.html :: sidebar">...</nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+			<!-- Top Bar  -->
+			<nav th:replace="fragments/topBar.html :: topBar">...</nav>
+			<nav th:replace="fragments/messages.html :: error">...</nav>
+			<nav th:replace="fragments/messages.html :: success">...</nav>
+			<nav th:replace="fragments/messages.html :: warning">...</nav>
+				
+			<h1 th:inline="text">Researches</h1>
+			
+			<table id="problemsTable" class="table table-striped table-bordered nowrap small" style="width:100%">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="problem : ${problems}">
+						<td th:text="${problem.name}"></td>
+						<td th:text="${problem.description}"></td>
+						<td th:if="${problem.status==1}">
+							<button type="button" class="btn btn-primary btn-sm" data-target="#myModal" data-toggle="modal" th:attrappend="data-target='_'+${problem.id}">
+								Start
+							</button>
+							<!-- Modal -->
+							<div class="modal fade" tabindex="-1" role="dialog" id="myModal" th:attrappend="id='_'+${problem.id}" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<form th:action="@{/problems/manage/start}" method="post">
+										<input type="number" th:name="problemId" th:value="${problem.id}" class="d-none">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel" th:text="${'Start research: '+ problem.name}"></h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<div class="form-group">
+													<select class="form-control input-sm" id="criteria" name="userGroupId">
+														<option th:each="userGroup : ${usersGroup}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
+													</select>
+												</div>
+												<div>
+											        <label for="date">Date</label>
+											        <input id="date" name="expireDate" type="date" required="required" />
+											    </div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												<button type="submit" class="btn btn-primary">Start Research</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</td>
+						<td th:if="${problem.status==2}">Running</td>
+						<td th:if="${problem.status==3}">
+							<a th:href="@{/runAHP/} + ${problem.id}" class="btn btn-success btn-sm">
+							  	<i class="fas fa-run"></i> Generate Data
+							</a>
+						</td>
+						<td th:if="${problem.status==4}">
+							<a th:href="@{/runAHP/downloadPreview/} + ${problem.id}" class="btn btn-success btn-sm">
+							  	<i class="fas fa-download"></i> Download Preview
+							</a>
+							<!-- <a th:href="@{/runAHP/excell/} + ${problem.id}" class="btn btn-success btn-sm" download>
+							  	<i class="fas fa-download"></i> Download
+							</a>
+							<a th:href="@{/runAHP/excell/data/} + ${problem.id}" class="btn btn-success btn-sm" download>
+							  	<i class="fas fa-download"></i> Download data
+							</a> -->
+						</td>
+						<td><a th:if="${problem.status==1}" class="btn btn-primary btn-sm" th:href="@{/problems/wizard/} + ${problem.id}"><i class="fas fa-pencil-alt"></i> Edit</a></td>
+						<td><a th:if="${problem.status==1}" class="btn btn-danger btn-sm" th:href="@{/problems/manage/delete/} + ${problem.id}"><i class="fas fa-trash-alt"></i> Delete</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div th:replace="fragments/footerScript.html">...</div>
+	<script>
+	$(document).ready(function() {
+	    $('#problemsTable').DataTable( {
+	    	aoColumnDefs: [
+		        {'bSortable': false, 'aTargets': [2, 3, 4]}
+		    ],
+		    oLanguage: {
+		        sEmptyTable: "No recherches found."
+		    },
+	        responsive: {
+	            details: {
+	                display: $.fn.dataTable.Responsive.display.modal( {
+	                    header: function ( row ) {
+	                        var data = row.data();
+	                        return 'Details for '+data[0]+' '+data[1];
+	                    }
+	                } ),
+	                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+	                    tableClass: 'table'
+	                } )
+	            }
+	        }
+	    } );
+	} );
+	</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<header th:replace="fragments/header.html :: header"> </header>
+<body>
+	<div class="wrapper">
+		<!-- Sidebar  -->
+		<nav th:replace="fragments/sidebar.html :: sidebar">...</nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+			<!-- Top Bar  -->
+			<nav th:replace="fragments/topBar.html :: topBar">...</nav>
+			<nav th:replace="fragments/messages.html :: error">...</nav>
+			<nav th:replace="fragments/messages.html :: success">...</nav>
+				
+			
+			<table id="problemsTable" class="table table-striped table-bordered nowrap small" style="width:100%">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="problemUser : ${problemsUser}">
+						<td th:text="${problemUser.problem.name}"></td>
+						<td th:text="${problemUser.problem.description}"></td>
+						<td><a class="btn btn-primary btn-sm" th:href="@{/problemsUser/run/} + ${problemUser.id}"><i class="fas fa-pencil-alt"></i> Run</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div th:replace="fragments/footerScript.html">...</div>
+
+	<script>
+	$(document).ready(function() {
+	    $('#problemsTable').DataTable( {
+	    	aoColumnDefs: [
+		        {'bSortable': false, 'aTargets': [2]}
+		    ],
+		    oLanguage: {
+		        sEmptyTable: "No recherches found."
+		    },
+	        responsive: {
+	            details: {
+	                display: $.fn.dataTable.Responsive.display.modal( {
+	                    header: function ( row ) {
+	                        var data = row.data();
+	                        return 'Details for '+data[0]+' '+data[1];
+	                    }
+	                } ),
+	                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+	                    tableClass: 'table'
+	                } )
+	            }
+	        }
+	    } );
+	} );
+	</script>
+</body>
+</html>

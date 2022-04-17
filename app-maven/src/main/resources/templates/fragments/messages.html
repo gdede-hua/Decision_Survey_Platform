@@ -1,0 +1,6 @@
+<div class="alert alert-danger" role="alert" th:fragment="error" th:if="${errorMsg != null}"  th:utext="${'<strong>Error!</strong> '+ errorMsg}">
+</div>
+<div class="alert alert-success" role="alert" th:fragment="success" th:if="${successMsg != null}"  th:utext="${'<strong>Success!</strong> '+ successMsg}">
+</div>
+<div class="alert alert-warning" role="alert" th:fragment="warning" th:if="${warningMsg != null}"  th:utext="${'<strong>Warning!</strong> '+ warningMsg}">
+</div>

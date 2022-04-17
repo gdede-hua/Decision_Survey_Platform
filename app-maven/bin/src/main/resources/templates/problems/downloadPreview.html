@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<header th:replace="fragments/header.html :: header"> </header>
+<body>
+	<div class="wrapper">
+		<!-- Sidebar  -->
+		<nav th:replace="fragments/sidebar.html :: sidebar">...</nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+			<!-- Top Bar  -->
+			<nav th:replace="fragments/topBar.html :: topBar">...</nav>
+			<nav th:replace="fragments/messages.html :: error">...</nav>
+			<nav th:replace="fragments/messages.html :: success">...</nav>
+			<nav th:replace="fragments/messages.html :: warning">...</nav>
+
+			<div class="row">
+				<div class="col">
+					<h1 th:inline="text">Download Preview</h1>
+				</div>
+				<div class="col">
+					<a th:href="@{/runAHP/excell/data/}+ ${problemsUserAhpId}"
+						class="btn btn-success btn-md float-right" download> <i
+						class="fas fa-download"></i> Download data
+					</a>
+				</div>
+			</div>
+
+			<!-- 	<div 
+				class="form-group text-center border p-1 col-md-2 col-sm-3 col-4" >
+				 -->
+
+			<form method="POST" th:action="@{/runAHP/excell}" download>
+				<input name="id" class="d-none" type="text" th:value="${problemsUserAhpId}" >
+											
+				<div class="accordion" id="accordion" th:each="problemsUserAHP, rowPualStat : ${problemsUserAhp}">
+					<div class="card" th:if="${#lists.size(problemsUserAHP.problemUser.problem.criteria)>1}">
+						<div class="card-header collapsed" id="headingOne" data-toggle="collapse"
+							th:attr="data-target='#collapseCriteria'+${rowPualStat.index}"aria-expanded="true"
+							aria-controls="collapseCriteria">
+							<h5 class="mb-0" th:text="'Username: '+${problemsUserAHP.problemUser.user.username}">
+							</h5>
+						</div>
+	
+						<div th:id="'collapseCriteria'+${rowPualStat.index}" class="collapse row"
+							aria-labelledby="headingOne" data-parent="#accordion">
+							<div class="card-body">
+								<div class="row">
+									<div class="groupItem col">
+										<div class="form-check">
+											<input th:name="'generateAhpResultsExcellWithSelection['+${rowPualStat.index}+'].user.username'" class="d-none" type="text" th:value="${problemsUserAHP.problemUser.user.username}" >
+											<input class="form-check-input" type="checkbox" value="true"
+												id="defaultCheck1" th:name="|generateAhpResultsExcellWithSelection[${rowPualStat.index}].status|"
+												checked>
+											<label class="form-check-label" for="defaultCheck1" th:text="'Add this user'"></label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<label class="form-check-label" th:text="'Criteria'"></label>
+					    				<div class="col">
+											<label class="form-check-label" th:text="'CR: '+${problemsUserAHP.criteriaCrAhp.cr}"></label>
+										</div>
+									</div>
+									<div class="col">
+										<label class="form-check-label"th:text="'Factors'"></label>
+										<div class="col" th:each="factorCrAhp, rowStat : ${problemsUserAHP.factorCrAhp}">
+											<label class="form-check-label"th:text="${factorCrAhp.criteria.name}+' CR: '+${factorCrAhp.cr}"></label>
+										</div>
+									</div>
+									<div class="col">
+										<label class="form-check-label"th:text="'Alternative Criteria '"></label>
+										<div class="col" th:each="alternativesCriteriaCrAhp, rowStat : ${problemsUserAHP.alternativesCriteriaCrAhp}">
+											<label class="form-check-label"th:text="${alternativesCriteriaCrAhp.criteria.name}+ ' CR: '+${alternativesCriteriaCrAhp.cr}"></label>
+										</div>
+									</div>
+									<div class="col">
+										<label class="form-check-label"th:text="'Alternative Factor'"></label>
+										<div class="col" th:each="alternativesFactorCrAhp, rowStat : ${problemsUserAHP.alternativesFactorCrAhp}">
+											<label class="form-check-label"th:text="${alternativesFactorCrAhp.factor.name}+' CR: '+${alternativesFactorCrAhp.cr}"></label>
+										</div>
+									</div>	
+								</div>					
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="groupItem col">
+						<button type="submit" class="btn btn-success btn-md float-right"><i class="fas fa-download"></i> Download</button>
+					</div>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+
+	<div th:replace="fragments/footerScript.html">...</div>
+	<style>
+		.groupItem{
+			margin: 10px;
+		}
+		.groupItem .form-check{
+			margin-left: 10px;
+		}
+	</style>
+</body>
+</html>

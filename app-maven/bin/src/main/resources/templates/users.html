@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<header th:replace="fragments/header.html :: header"> </header>
+<body>
+	<div class="wrapper">
+		<!-- Sidebar  -->
+		<nav th:replace="fragments/sidebar.html :: sidebar">...</nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+			<!-- Top Bar  -->
+			<nav th:replace="fragments/topBar.html :: topBar">...</nav>
+			<nav th:replace="fragments/messages.html :: error">...</nav>
+			<nav th:replace="fragments/messages.html :: success">...</nav>
+
+			<h1 th:inline="text">Users</h1>
+			
+			<table id="userTable" class="table table-striped table-bordered nowrap small" style="width:100%">
+				<thead>
+					<tr>
+						<th>Username</th>
+						<th>Real Name</th>
+						<th>E-mail</th>
+						<th>Status</th>
+						<th>Role</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${users}" th:if="${user.enabled==1}">
+						<td th:text="${user.username}"></td>
+						<td th:text="${user.realName}"></td>
+						<td th:text="${user.email}"></td>
+						<td th:text="${user.enabled==1 ? 'Enabled' : 'Disabled'}"></td>
+						<td th:text="${user.authorities.authority}"></td>
+						<td>
+							<button th:if="${user.enabled==1}" type="button" class="btn btn-primary btn-sm" data-target="#myModal" data-toggle="modal" th:attrappend="data-target='_'+${user.id}">
+								<i class="fas fa-pencil-alt"></i> Edit
+							</button>
+							<!-- Modal -->
+							<div th:if="${user.enabled==1}" class="modal fade" tabindex="-1" role="dialog" id="myModal" th:attrappend="id='_'+${user.id}" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<form th:action="@{/users/edit}" method="post">
+										<input type="text" th:name="id" th:value="${user.id}" class="d-none">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel" th:text="${'Edit user: '+ user.username}"></h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<div class="form-group">
+													<label for="exampleInputEmail1">Email address</label> 
+													<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:name="email" th:value="${user.email}">
+													<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+												</div>
+												<div class="form-group">
+													<label for="exampleInputRealName">Real Name</label> 
+													<input type="text" class="form-control" id="exampleInputRealName" aria-describedby="realNameHelp" placeholder="Enter real name" th:name="realName" th:value="${user.realName}">
+												</div>
+												<div class="form-group" sec:authorize="hasRole('ROLE_ADMIN')">
+													<label for="exampleFormControlSelect2">User Authority</label><br>
+													<select class="selectpicker form-control" name="authorities.authority" data-live-search="true"
+														id="exampleFormControlSelect2">
+														<option th:value="ROLE_USER"
+															th:selected="${user.authorities.authority.contains('USER')}"
+															th:text="User"></option>
+														<option th:value="ROLE_ADMIN"
+															th:selected="${user.authorities.authority.contains('ADMIN')}"
+															th:text="Admin"></option>
+													</select>
+												</div>
+											</div>
+											<div class="modal-footer" >
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												<button type="submit" class="btn btn-primary">Save changes</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						<td>
+							<form th:if="${user.enabled==1}" th:action="@{/users/delete/} + ${user.id}" method="post">
+								<button class="btn btn-danger btn-sm" th:id="'delete_' + ${user.username}" type="submit">
+									<i class="fas fa-trash-alt"></i> Delete
+								</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div th:replace="fragments/footerScript.html">...</div>
+	<script>
+	$(document).ready(function() {
+	    $('#userTable').DataTable( {
+	    	aoColumnDefs: [
+		        {'bSortable': false, 'aTargets': [5, 6]}
+		    ],
+		    oLanguage: {
+		        sEmptyTable: "No users found."
+		    },
+	        responsive: {
+	            details: {
+	                display: $.fn.dataTable.Responsive.display.modal( {
+	                    header: function ( row ) {
+	                        var data = row.data();
+	                        return 'Details for '+data[0]+' '+data[1];
+	                    }
+	                } ),
+	                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+	                    tableClass: 'table'
+	                } )
+	            }
+	        }
+	    } );
+	} );
+	</script>
+</body>
+</html>

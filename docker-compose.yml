@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  # MySQL - Database for Decision Maker
+  mysql:
+    container_name: ${MYSQL_HOST}
+    image: mysql:5.6
+    restart: unless-stopped
+    ports:
+      - ${MYSQL_PORT}:${MYSQL_PORT}
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # App - java for Decision Maker build with maven
+  app:
+    container_name: ${APP_HOST}
+    build: ${APPLICATION_ROOT_FOLDER}
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - AES_SECRET_KEY=${AES_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - ${APPLICATION_ROOT_FOLDER}:/usr/src/mymaven

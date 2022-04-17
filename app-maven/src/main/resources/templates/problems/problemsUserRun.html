@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<header th:replace="fragments/header.html :: header"> </header>
+<body>
+	<div class="wrapper">
+		<!-- Sidebar  -->
+		<nav th:replace="fragments/sidebar.html :: sidebar">...</nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+			<!-- Top Bar  -->
+			<nav th:replace="fragments/topBar.html :: topBar">...</nav>
+			<nav th:replace="fragments/messages.html :: error">...</nav>
+			<nav th:replace="fragments/messages.html :: success">...</nav>
+			
+			<form method="POST" th:action="@{/problemsUser/save}">
+				<input name="status" class="d-none" type="number" value="1" >
+				<input name="user.username" class="d-none" type="text" th:value="${#httpServletRequest.remoteUser}" >
+				<input name="problem.id" class="d-none" type="number" th:value="${problemsUser.problem.id}" >
+				<input name="id" class="d-none" type="number" th:value="${problemsUser.id}" >
+				<nav>
+					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				    	<a class="nav-item nav-link small active" 
+				    		th:if="${#lists.size(problemsUser.problem.criteria)>1}" 
+				    		id="nav-cretiria-tab" data-toggle="tab" 
+				    		href="#nav-cretiria" 
+				    		role="tab" 
+				    		aria-controls="nav-cretiria" 
+				    		aria-selected="true">Criteria</a>
+					    <a class="nav-item nav-link small" data-toggle="tab" role="tab" aria-selected="false" 
+					   		th:each="criteria, rowStat : ${problemsUser.problem.criteria}"
+					   		th:if="${#lists.size(criteria.factor)>1}"
+					   		th:text="'SC: '+${criteria.name}"
+					   		th:id="'nav-factor'+${criteria.id}+'-tab'"
+					   		th:href="'#nav-factor'+${criteria.id}"
+					   		th:attr="aria-controls='nav-factor'+${criteria.id}"
+					   	></a>
+					   	<a class="nav-item nav-link small" data-toggle="tab" role="tab" aria-selected="false" 
+					   		th:each="criteria, rowStat : ${problemsUser.problem.criteria}"
+					   		th:if="${#lists.size(criteria.factor)==0 && #lists.size(problemsUser.problem.alternatives)>1}"
+					   		th:text="'CT: '+${criteria.name}"
+					   		th:id="'nav-criteria'+${criteria.id}+'-tab'"
+					   		th:href="'#nav-criteria'+${criteria.id}"
+					   		th:attr="aria-controls='nav-criteria'+${criteria.id}"
+					   	></a>
+						<a class="nav-item nav-link small" data-toggle="tab" role="tab" aria-selected="false" 
+					   		th:each="factor, rowStat :${factors }"
+					   		th:if="${#lists.size(problemsUser.problem.alternatives)>1}"
+					   		th:text="'SCT: '+${factor.name}"
+					   		th:id="'nav-factorId'+${factor.id}+'-tab'"
+					   		th:href="'#nav-factorId'+${factor.id}"
+					   		th:attr="aria-controls='nav-factorId'+${factor.id}"
+					   	></a>
+					   	
+				  	</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+				  	<div class="tab-pane fade show active" role="tabpanel"
+				    		th:if="${#lists.size(problemsUser.problem.criteria)>1}" 
+				    		id="nav-cretiria" 
+				    		aria-labelledby="nav-cretiria-tab">
+						<div class="col-12 runProblem justify-content-center pt-2" style="overflow: auto;">
+							<div th:each="criteria, rowStat : ${problemsUser.problem.criteria}" class="form-row" th:if="!${rowStat.last}">
+								<div class="form-group text-center border p-1 col-md-2 col-sm-3 col-4">
+									<label class="mt-4 small" th:text="${criteria.name}"></label>
+								</div>
+								<div th:each="criteriaSec, rowSecStat : ${problemsUser.problem.criteria}" th:if="${rowStat.index<rowSecStat.index}" 
+									class="form-group criteriaAnswer text-center border p-1 col-md-2 col-sm-3 col-4" >
+									<input type="number" class="d-none" th:value="${criteria.id}" data-name="criteriaTop.id">
+									<input type="number" class="d-none" th:value="${criteriaSec.id}" data-name="criteriaLeft.id">
+									<label class="small" for="criteria" th:text="${criteriaSec.name}"></label> 
+									<select class="form-control input-sm" id="criteria" data-name="weight">
+										<option value="1" th:text="'Equally Importance'"></option>
+									    <optgroup th:attr="label=${criteria.name}">
+											<option value="2" th:text="'Equally to moderatly importance (2)'"></option>
+											<option value="3" th:text="'Moderatly Importance (3)'"></option>
+											<option value="4" th:text="'Moderatly to strongly importance (4)'"></option>
+											<option value="5" th:text="'Strongly importance (5)'"></option>
+											<option value="6" th:text="'Strongly to very strongly importance (6)'"></option>
+											<option value="7" th:text="'Strongly importance (7)'"></option>
+											<option value="8" th:text="'Very to extremely strongly importance (8)'"></option>
+											<option value="9" th:text="'Extremely Importance (9)'"></option>
+										</optgroup>
+										<optgroup th:attr="label=${criteriaSec.name}">
+											<option value="0.5" th:text="'Equally to moderatly importance (1/2)'"></option>
+											<option value="0.33" th:text="'Moderatly Importance (1/3)'"></option>
+											<option value="0.25" th:text="'Moderatly to strongly importance (1/4)'"></option>
+											<option value="0.2" th:text="'Strongly importance (1/5)'"></option>
+											<option value="0.16" th:text="'Strongly to very strongly importance (1/6)'"></option>
+											<option value="0.14" th:text="'Strongly importance (1/7)'"></option>
+											<option value="0.12" th:text="'Very to extremely strongly importance (1/8)'"></option>
+											<option value="0.11" th:text="'Extremely Importance (1/9)'"></option>
+										</optgroup>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel"
+						th:each="criteria, rowCritStat: ${problemsUser.problem.criteria}"
+						th:if="${#lists.size(criteria.factor)>1}"
+						th:id="'nav-factor'+${criteria.id}"
+					   	th:attr="aria-labelledby='nav-factor'+${criteria.id}+'-tab'"
+					>
+						<div class="col-12 runProblem justify-content-center pt-2" style="overflow: auto;">
+							<div th:each="factor, rowStat : ${criteria.factor}" class="form-row" th:if="!${rowStat.last}">
+								<div class="form-group text-center border p-1 col-md-2 col-sm-3 col-4">
+									<label class="mt-4 small" th:text="${factor.name}"></label>
+								</div>
+								<div th:each="factorSec, rowSecStat : ${criteria.factor}" th:if="${rowStat.index<rowSecStat.index}" class="form-group factorAnswer text-center border p-1 col-md-2 col-sm-3 col-4">
+									<input type="number" class="d-none" th:value="${criteria.id}" data-name="criteria.id">
+									<input type="number" class="d-none" th:value="${factor.id}" data-name="factorTop.id">
+									<input type="number" class="d-none" th:value="${factorSec.id}" data-name="factorLeft.id">
+									<label class="small" for="creteria" th:text="${factorSec.name}"></label>
+									<select class="form-control input-sm" id="criteria" data-name="weight">
+										<option value="1" th:text="'Equals Importance'"></option>
+									    <optgroup th:attr="label=${factor.name}">
+											<option value="2" th:text="'Equally to moderatly importance (2)'"></option>
+											<option value="3" th:text="'Moderatly Importance (3)'"></option>
+											<option value="4" th:text="'Moderatly to strongly importance (4)'"></option>
+											<option value="5" th:text="'Strongly importance (5)'"></option>
+											<option value="6" th:text="'Strongly to very strongly importance (6)'"></option>
+											<option value="7" th:text="'Strongly importance (7)'"></option>
+											<option value="8" th:text="'Very to extremely strongly importance (8)'"></option>
+											<option value="9" th:text="'Extremely Importance (9)'"></option>
+										</optgroup>
+										<optgroup th:attr="label=${factorSec.name}">
+											<option value="0.5" th:text="'Equally to moderatly importance (1/2)'"></option>
+											<option value="0.33" th:text="'Moderatly Importance (1/3)'"></option>
+											<option value="0.25" th:text="'Moderatly to strongly importance (1/4)'"></option>
+											<option value="0.2" th:text="'Strongly importance (1/5)'"></option>
+											<option value="0.16" th:text="'Strongly to very strongly importance (1/6)'"></option>
+											<option value="0.14" th:text="'Strongly importance (1/7)'"></option>
+											<option value="0.12" th:text="'Very to extremely strongly importance (1/8)'"></option>
+											<option value="0.11" th:text="'Extremely Importance (1/9)'"></option>
+										</optgroup>
+									</select>			
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel"
+						th:each="criteria : ${problemsUser.problem.criteria}"
+						th:if="${#lists.size(criteria.factor)==0}"
+						th:id="'nav-criteria'+${criteria.id}"
+					   	th:attr="aria-labelledby='nav-criteria'+${criteria.id}+'-tab'"
+					>
+						<div class="col-12 runProblem justify-content-center pt-2" style="overflow: auto;">
+							<div th:each="alternatives, rowStat : ${problemsUser.problem.alternatives}" class="form-row" th:if="!${rowStat.last}">
+								<div class="form-group text-center border p-1 col-md-2 col-sm-3 col-4">
+									<label class="mt-4 small" th:text="${alternatives.name}"></label>
+								</div>
+								<div th:each="alternativesSec, rowSecStat : ${problemsUser.problem.alternatives}" th:if="${rowStat.index<rowSecStat.index}" class="form-group alternativesCriteriaAnswer text-center border p-1 col-md-2 col-sm-3 col-4">
+									<input type="number" class="d-none" th:value="${criteria.id}" data-name="criteria.id">
+									<input type="number" class="d-none" th:value="${alternatives.id}" data-name="alternativesTop.id">
+									<input type="number" class="d-none" th:value="${alternativesSec.id}" data-name="alternativesLeft.id">
+									<label class="small" for="alternatives" th:text="${alternativesSec.name}"></label> 
+									<select class="form-control input-sm" id="alternatives" data-name="weight">
+										<option value="1" th:text="'Equals Importance'"></option>
+									    <optgroup th:attr="label=${alternatives.name}">
+											<option value="2" th:text="'Equally to moderatly importance (2)'"></option>
+											<option value="3" th:text="'Moderatly Importance (3)'"></option>
+											<option value="4" th:text="'Moderatly to strongly importance (4)'"></option>
+											<option value="5" th:text="'Strongly importance (5)'"></option>
+											<option value="6" th:text="'Strongly to very strongly importance (6)'"></option>
+											<option value="7" th:text="'Strongly importance (7)'"></option>
+											<option value="8" th:text="'Very to extremely strongly importance (8)'"></option>
+											<option value="9" th:text="'Extremely Importance (9)'"></option>
+										</optgroup>
+										<optgroup th:attr="label=${alternativesSec.name}">
+											<option value="0.5" th:text="'Equally to moderatly importance (1/2)'"></option>
+											<option value="0.33" th:text="'Moderatly Importance (1/3)'"></option>
+											<option value="0.25" th:text="'Moderatly to strongly importance (1/4)'"></option>
+											<option value="0.2" th:text="'Strongly importance (1/5)'"></option>
+											<option value="0.16" th:text="'Strongly to very strongly importance (1/6)'"></option>
+											<option value="0.14" th:text="'Strongly importance (1/7)'"></option>
+											<option value="0.12" th:text="'Very to extremely strongly importance (1/8)'"></option>
+											<option value="0.11" th:text="'Extremely Importance (1/9)'"></option>
+										</optgroup>
+									</select>
+												
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel"
+						th:each="factor : ${factors}"
+						th:id="'nav-factorId'+${factor.id}"
+					   	th:attr="aria-labelledby='nav-factorId'+${factor.id}+'-tab'"
+					>
+						<div class="col-12 runProblem justify-content-center pt-2" style="overflow: auto;">
+							<div th:each="alternatives, rowStat : ${problemsUser.problem.alternatives}" class="form-row" th:if="!${rowStat.last}">
+								<div class="form-group text-center border p-1 col-md-2 col-sm-3 col-4">
+									<label class="mt-4 small" th:text="${alternatives.name}"></label>
+								</div>
+								<div th:each="alternativesSec, rowSecStat : ${problemsUser.problem.alternatives}" th:if="${rowStat.index<rowSecStat.index}" class="form-group alternativesFactorAnswer text-center border p-1 col-md-2 col-sm-3 col-4">
+									<input type="number" class="d-none" th:value="${factor.id}" data-name="factor.id">
+									<input type="number" class="d-none" th:value="${alternatives.id}" data-name="alternativesTop.id">
+									<input type="number" class="d-none" th:value="${alternativesSec.id}" data-name="alternativesLeft.id">
+									<label class="small" for="alternatives" th:text="${alternativesSec.name}"></label> 
+									<select class="form-control input-sm" id="alternatives" data-name="weight">
+										<option value="1" th:text="'Equals Importance'"></option>
+									    <optgroup th:attr="label=${alternatives.name}">
+											<option value="2" th:text="'Equally to moderatly importance (2)'"></option>
+											<option value="3" th:text="'Moderatly Importance (3)'"></option>
+											<option value="4" th:text="'Moderatly to strongly importance (4)'"></option>
+											<option value="5" th:text="'Strongly importance (5)'"></option>
+											<option value="6" th:text="'Strongly to very strongly importance (6)'"></option>
+											<option value="7" th:text="'Strongly importance (7)'"></option>
+											<option value="8" th:text="'Very to extremely strongly importance (8)'"></option>
+											<option value="9" th:text="'Extremely Importance (9)'"></option>
+										</optgroup>
+										<optgroup th:attr="label=${alternativesSec.name}">
+											<option value="0.5" th:text="'Equally to moderatly importance (1/2)'"></option>
+											<option value="0.33" th:text="'Moderatly Importance (1/3)'"></option>
+											<option value="0.25" th:text="'Moderatly to strongly importance (1/4)'"></option>
+											<option value="0.2" th:text="'Strongly importance (1/5)'"></option>
+											<option value="0.16" th:text="'Strongly to very strongly importance (1/6)'"></option>
+											<option value="0.14" th:text="'Strongly importance (1/7)'"></option>
+											<option value="0.12" th:text="'Very to extremely strongly importance (1/8)'"></option>
+											<option value="0.11" th:text="'Extremely Importance (1/9)'"></option>
+										</optgroup>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary float-right">Save</button>
+			</form>
+		</div>
+	</div>
+	<div th:replace="fragments/footerScript.html">...</div>
+	<script>
+	$( document ).ready(function() {
+		var criteriaAnswer=0;
+		$(".criteriaAnswer").each(function() {
+			$(this).find('input[type=number], select').each(function(i){
+				$(this).attr('name', 'criteriaAnswer['+criteriaAnswer+'].'+$( this ).data( "name" ));
+			});
+			criteriaAnswer++;
+		});
+		var factorAnswer=0;
+		$(".factorAnswer").each(function() {
+			$(this).find('input[type=number], select').each(function(i){
+				$(this).attr('name', 'factorAnswer['+factorAnswer+'].'+$( this ).data( "name" ));
+			});
+			factorAnswer++;
+		});
+		var alternativesCriteriaAnswer=0;
+		$(".alternativesCriteriaAnswer").each(function() {
+			$(this).find('input[type=number], select').each(function(i){
+				$(this).attr('name', 'alternativesCriteriaAnswer['+alternativesCriteriaAnswer+'].'+$( this ).data( "name" ));
+			});
+			alternativesCriteriaAnswer++;
+		});
+		var alternativesFactorAnswer=0;
+		$(".alternativesFactorAnswer").each(function() {
+			$(this).find('input[type=number], select').each(function(i){
+				$(this).attr('name', 'alternativesFactorAnswer['+alternativesFactorAnswer+'].'+$( this ).data( "name" ));
+			});
+			alternativesFactorAnswer++;
+		});
+		
+	});
+	
+	</script>
+	
+</body>
+</html>

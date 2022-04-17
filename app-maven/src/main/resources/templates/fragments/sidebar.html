@@ -1,0 +1,23 @@
+
+<!-- Sidebar  -->
+<nav id="sidebar" th:fragment="sidebar">
+	<div class="sidebar-header">
+		<h3>Decision Maker</h3>
+	</div>
+	<ul class="list-unstyled components">
+		<li th:each="menuRow : ${session.menu}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/'+menuRow.link) ? 'active':''}">
+			<a th:href="@{/} + ${menuRow.link}" th:text="${menuRow.name}" th:if="${#lists.isEmpty(menuRow.childMenu)}"></a>
+			
+			<a th:href="'#' + ${menuRow.link}" th:text="${menuRow.name}" th:if="${not #lists.isEmpty(menuRow.childMenu)}" data-toggle="collapse" class="dropdown-toggle"
+			 th:attr="aria-expanded=''+${#httpServletRequest.getRequestURI().startsWith('/'+menuRow.link) ? true:false}"></a>
+			<ul class="list-unstyled collapse" th:id="${menuRow.link}" th:if="${not #lists.isEmpty(menuRow.childMenu)}" 
+				th:classappend="${#httpServletRequest.getRequestURI().startsWith('/'+menuRow.link) ? 'show':''}">
+				<li th:each="subMenuRow : ${menuRow.childMenu}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/'+subMenuRow.link) ? 'active':''}">
+					<a th:href="@{/} + ${subMenuRow.link}" th:text="${subMenuRow.name}"></a>
+				</li>
+			</ul>
+			
+		</li>
+	</ul>
+
+</nav>

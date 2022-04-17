@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<header th:replace="fragments/header.html :: header"> </header>
+<body>
+	<div class="wrapper">
+		<!-- Sidebar  -->
+		<nav th:replace="fragments/sidebar.html :: sidebar">...</nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+			<!-- Top Bar  -->
+			<nav th:replace="fragments/topBar.html :: topBar">...</nav>
+			<nav th:replace="fragments/messages.html :: error">...</nav>
+			<nav th:replace="fragments/messages.html :: success">...</nav>
+			<form th:action="@{/problems/wizard/save}" method="post">
+				
+				<div class="form-row">
+					<div class="col-md-6 col-sm-6 col-12">
+						<div class="border rounded p-2">
+							<div class="form-group">
+								<label for="researchName">Research Name</label> 
+								<input type="text" class="form-control" id="researchName" aria-describedby="researchNameHelp" placeholder="Research Name" th:name="name" th:value="${problem.name!=null ? problem.name:''}">
+								<input type="text" th:if="${id!=0}" th:name="id" th:value="${problem.id!=0 ? problem.id:0}" class="d-none">
+								<small id="researchNameHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+							</div>
+							<div class="form-group">
+							    <label for="description">Description</label>
+							    <textarea class="form-control" id="description" rows="5" th:name="description" th:text="${problem.description!=null ? problem.description:''}"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-6 col-12">
+						<div class="border rounded p-2" id="alternative">
+							<button type="button" class="btn btn-outline-danger float-right btn-sm" th:attr="onclick=${'removeAlternative()'}"><i class="fa fa-minus" aria-hidden="true"></i> Alternative</button>
+							<button type="button" class="btn btn-outline-success btn-sm" th:attr="onclick=${'newAlternative()'}"><i class="fa fa-plus" aria-hidden="true"></i> Alternative</button>
+							<div class="form-group" th:each="alternatives, rowStat : ${problem.alternatives}">
+								<label class="small" th:attr="for=${'alternatives'+__${rowStat.index}__}" th:text="${'Alternative '+__${rowStat.index + 1}__}"></label> 
+								<input type="text" class="form-control" th:id="${'alternatives'+__${rowStat.index}__}" placeholder="Alternative Name" th:name="${'alternatives['+__${rowStat.index}__+'].name'}" th:value="${alternatives.name}">
+								<input type="text" th:if="${alternatives.id!=0}" th:name="${'alternatives['+__${rowStat.index}__+'].id'}" th:value="${alternatives.id}" class="d-none">
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="form-row">
+					<div class="form-group">
+						<button type="button" class="btn btn-outline-success btn-sm" onclick="newCriteria()"><i class="fa fa-plus" aria-hidden="true"></i> Criteria</button>
+						<button type="button" class="btn btn-outline-danger btn-sm" onclick="removeCriteria()"><i class="fa fa-minus" aria-hidden="true"></i> Criteria</button>
+					</div>
+				</div>
+				<div class="form-row" id="criteria">
+					<div class="criteria form-group col-lg-2 col-md-4 col-sm-6 col-12" th:each="criteria, rowStat : ${problem.criteria}">
+						<div class="border rounded p-2">
+							<label class="font-weight-bold" th:attr="for=${'criteria'+__${rowStat.index}__}" th:text="${'Criteria '+__${rowStat.index + 1}__}"></label>
+							<input type="text" class="form-control" th:id="${'criteria'+__${rowStat.index}__}" placeholder="Criteria Name" th:name="${'criteria['+__${rowStat.index}__+'].name'}" th:value="${criteria.name}">
+							<input type="text" th:if="${criteria.id!=0}" th:name="${'criteria['+__${rowStat.index}__+'].id'}" th:value="${criteria.id}"  class="d-none"><hr>
+							<button type="button" class="btn btn-outline-success btn-sm" th:attr="onclick=${'newFactor('+__${rowStat.index}__+')'}"><i class="fa fa-plus" aria-hidden="true"></i> Factor</button>
+							<button type="button" class="btn btn-outline-danger float-right btn-sm" th:attr="onclick=${'removeFactor('+__${rowStat.index}__+')'}"><i class="fa fa-minus" aria-hidden="true"></i> Factor</button>
+							<div th:id="${'factor'+__${rowStat.index}__}">
+								<div class="form-group" th:each="factor, rowStatFactor : ${criteria.factor}">
+									<label class="small" th:attr="for=${'criteria'+__${rowStat.index}__+'factor'+__${rowStatFactor.index}__}" th:text="${'Factor '+__${rowStatFactor.index + 1}__}"></label>
+									<input type="text" class="form-control" th:id="${'criteria'+__${rowStat.index}__+'factor'+__${rowStatFactor.index}__}" placeholder="Factor Name" th:name="${'criteria['+__${rowStat.index}__+'].factor['+__${rowStatFactor.index}__+'].name'}" th:value="${factor.name}" >
+									<input type="text" th:if="${factor.id!=0}" th:name="${'criteria['+__${rowStat.index}__+'].factor['+__${rowStatFactor.index}__+'].id'}" th:value="${factor.id}"  class="d-none">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</form>
+		</div>
+	</div>
+
+	<div th:replace="fragments/footerScript.html">...</div>
+	<script type="text/javascript">
+		function newCriteria() {
+			counter = $( "#criteria .criteria" ).length;
+			$( "#criteria" ).append( 
+				"<div class='criteria form-group col-lg-2 col-md-4 col-sm-6 col-12'>"+
+					"<div class='border rounded p-2'>"+
+						"<label for='criteria"+counter+"'><dt>Criteria "+(counter+1)+"</dt></label> "+
+						"<input type='text' class='form-control' id='criteria"+counter+"' placeholder='Criteria Name' name='criteria["+counter+"].name'> <hr>"+
+						"<button type='button' class='btn btn-outline-success btn-sm' onclick='newFactor("+counter+")'><i class='fa fa-plus' aria-hidden='true'></i> Factor</button>"+
+						"<button type='button' class='btn btn-outline-danger float-right btn-sm' onclick='removeFactor("+counter+")'><i class='fa fa-minus' aria-hidden='true'></i> Factor</button>"+
+						"<div id='factor"+counter+"'></div>"+
+					"</div>"+
+				"</div>" );
+		}
+		function newFactor(criteriaIndex) {
+			counter = $( "#factor"+criteriaIndex+" .form-group" ).length;
+			$( "#factor"+criteriaIndex ).append( 
+				"<div class='form-group'>"+
+					"<label for='criteria"+criteriaIndex+"factor"+counter+"' class='small'>Factor "+(counter+1)+"</label> "+
+					"<input type='text' class='form-control' id='criteria"+criteriaIndex+"factor"+counter+"' placeholder='Factor Name' name='criteria["+criteriaIndex+"].factor["+counter+"].name'> "+
+				"</div>" );
+		}
+		function newAlternative() {
+			counter = $( "#alternative .form-group" ).length;
+			$( "#alternative" ).append( 
+				"<div class='form-group'>"+
+					"<label class='small' for='alternatives"+counter+"'>Alternative "+(counter+1)+"</label> "+
+					"<input type='text' class='form-control' id='alternatives"+counter+"' placeholder='Alternative Name' name='alternatives["+counter+"].name'> "+
+				"</div>" );
+		}
+		function removeCriteria() {
+			$("#criteria .criteria:last-child").remove();
+		}
+		function removeFactor(criteriaIndex) {
+			$("#factor"+criteriaIndex+" .form-group:last-child").remove();
+		}
+		function removeAlternative() {
+			$("#alternative .form-group:last-child").remove();
+		}
+	</script>
+</body>
+</html>
