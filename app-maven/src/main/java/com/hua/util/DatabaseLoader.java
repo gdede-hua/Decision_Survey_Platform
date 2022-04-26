@@ -3,6 +3,7 @@ package com.hua.util;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,10 @@ import com.hua.repository.UsersRepository;
 
 @Component
 public class DatabaseLoader implements CommandLineRunner {
-	
+	@Value("${security.user.username}")
+    private String username;
+	@Value("${security.user.password}")
+    private String password;
 
 	private final UsersRepository userRepository;
 	private final MenuRepository menuRepository;
@@ -30,7 +34,7 @@ public class DatabaseLoader implements CommandLineRunner {
 		
 		if ( userRepository.findAll().size() == 0) {
 			String uuid = UUID.randomUUID().toString();
-			userRepository.save(new Users(uuid, "admin", "password", "Admin User", "admin@hua.gr", 1, new Authorities(uuid, "admin", "ROLE_ADMIN")));
+			userRepository.save(new Users(uuid, username, password, "Admin User", "admin@hua.gr", 1, new Authorities(uuid, username, "ROLE_ADMIN")));
 		}
 		
 		if (menuRepository.findAll().size() == 0) {
