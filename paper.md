@@ -1,5 +1,5 @@
 ---
-title: 'NO-DOUBT: A Decision Support Web Platformbased on AHP'
+title: 'NO-DOUBT: A Decision Support Web Platform based on AHP'
 tags:
   - JAVA
   - decision support
