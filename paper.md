@@ -33,7 +33,7 @@ complicated multicriteria decision making problems, using the Analytic
 Hierarchy Process (AHP). The AHP has been used around the world in a
 wide variety of decision situations, in fields such as government,
 business, industry,healthcare, education, project management
-[@chan2006ahp],[@dede2010evaluation],[@drake1998using],[@lee2006investigating],[@liberatore2008analytic],[@saaty2003decision].
+[@chan2006ahp;@dede2010evaluation;@drake1998using;@lee2006investigating;@liberatore2008analytic;@saaty2003decision].
 
 This application, extensively uses algorithms in order to solve a
 multicriteria problem, calculating weights for each criterion, factors
@@ -85,8 +85,7 @@ More specifically, the AHP-OS [@AHP-OS] is a free web based AHP tool for
 decision making processes. The AHP with R [@AHP-R] is an R package to
 model complex decision making problems using AHP. There are also other
 efforts that suppoty part or the whole AHP algorithm such as
-[@Paulgovan], [@Andrugo], [@Airiyu], [@Humberoroa], [@Pvlhx],
-[@Hogivano].
+[@Paulgovan;@Andrugo;@Airiyu;@Humberoroa;@Pvlhx;@Hogivano].
 
 Even though there are several software that support AHP there is no
 single solution that offers a web based platform which both
@@ -100,7 +99,7 @@ the authors have already begun to incorporate their research
 contributions in the field of decision making and more specifically, the
 estimation of the probability of rank reversal in order to investigate
 the stability of the final
-outcomes[@dede2015convergence],[@dede2016theoretical].
+outcomes[@dede2015convergence;@dede2016theoretical].
 
 # AHP Methodology 
 
