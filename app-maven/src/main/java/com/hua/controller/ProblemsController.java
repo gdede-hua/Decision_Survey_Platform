@@ -5,9 +5,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,16 +31,11 @@ import com.hua.util.Mailer;
 @RequestMapping("/problems")
 public class ProblemsController {
 
-	@Autowired
-	private ProblemsRepository problemsRepository;
-	@Autowired
-	private UsersGroupRepository userGroupRepository;
-	@Autowired
-	private ProblemsUserRepository problemsUserRepository;
-	@Autowired
-	private ProblemUserExpireRepository problemUserExpireRepository;
-	@Autowired
-	private UsersRepository userRepository;
+	private final ProblemsRepository problemsRepository;
+	private final UsersGroupRepository userGroupRepository;
+	private final ProblemsUserRepository problemsUserRepository;
+	private final ProblemUserExpireRepository problemUserExpireRepository;
+	private final UsersRepository userRepository;
 	
 	@Value("${security.mail.sslEnable}")
 	private boolean sslEnable;
@@ -57,34 +49,67 @@ public class ProblemsController {
 	private String socketPort;
 	@Value("${security.mail.smtpPort}")
 	private String smtpPort;
-	
-	
+
+	public ProblemsController(ProblemsRepository problemsRepository, UsersGroupRepository userGroupRepository, ProblemsUserRepository problemsUserRepository, ProblemUserExpireRepository problemUserExpireRepository, UsersRepository userRepository) {
+		this.problemsRepository = problemsRepository;
+		this.userGroupRepository = userGroupRepository;
+		this.problemsUserRepository = problemsUserRepository;
+		this.problemUserExpireRepository = problemUserExpireRepository;
+		this.userRepository = userRepository;
+	}
+
+	/**
+	 * Endpoint for the load of the research page
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param principal Information for the login user
+	 *
+	 * @return to research page
+	 */
 	@GetMapping("manage")
 	public String getManage(Model model, Principal principal) {
-		
-		model.addAttribute("problems", problemsRepository.findAllByUserUsername(principal.getName()).isPresent() ? 
-				problemsRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>() );
-		model.addAttribute("usersGroup", userGroupRepository.findAllByUserUsername(principal.getName()).isPresent() ?
-				userGroupRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>());
-		return "problems/problems.html";
+		return loadProblemsPage(model, principal);
 	}
+	/**
+	 * Endpoint for to delete a research
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param principal Information for the login user
+	 * @param id the id of the research
+	 *
+	 * @return to research page
+	 */
 	@GetMapping("manage/delete/{id}")
 	public String getDelete(Model model, Principal principal, @PathVariable(required = false) String id) {
 		problemsRepository.deleteById(Integer.parseInt(id));
-		model.addAttribute("problems", problemsRepository.findAllByUserUsername(principal.getName()).isPresent() ? 
-				problemsRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>() );
-		model.addAttribute("usersGroup", userGroupRepository.findAllByUserUsername(principal.getName()).isPresent() ?
-				userGroupRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>());
-		return "problems/problems.html";
+		return loadProblemsPage(model, principal);
 	}
+	/**
+	 * Endpoint for the wizard.
+	 * The wizard used to create research.
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param id the id of the research if we are on edit mode
+	 *
+	 * @return to wizard page
+	 */
 	@GetMapping(path = {"/wizard", "/wizard/{id}"})
-	public String getWizard(Model model, HttpSession session, @PathVariable(required = false) String id) {
+	public String getWizard(Model model, @PathVariable(required = false) String id) {
 		if (id!=null)
 			model.addAttribute("problem", problemsRepository.findById(Integer.parseInt(id)).get());
 		else
 			model.addAttribute("problem", new Problem());
 		return "problems/wizard.html";
 	}
+	/**
+	 * Endpoint for create/edit research
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param principal Information for the login user
+	 * @param problem that item have all the information for the creation of the research
+	 *
+	 * @return to research page
+	 */
 	@PostMapping("wizard/save")
 	public String wizardStart(Model model, Principal principal, @ModelAttribute Problem problem) {
 		problem.setStatus(1);
@@ -93,12 +118,18 @@ public class ProblemsController {
 		problemsRepository.save(problem);
 		model.addAttribute("successMsg", "Successfully add research: "+problem.getName());
 
-		model.addAttribute("problems", problemsRepository.findAllByUserUsername(principal.getName()).isPresent() ? 
-				problemsRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>() );
-		model.addAttribute("usersGroup", userGroupRepository.findAllByUserUsername(principal.getName()).isPresent() ?
-				userGroupRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>());
-		return "problems/problems.html";
+		return loadProblemsPage(model, principal);
 	}
+	/**
+	 * Endpoint for publishing a research
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param principal Information for the login user
+	 * @param problemId The id of the research we want to publish
+	 * @param userGroupId the group of user we would publish the research
+	 *
+	 * @return to research page
+	 */
 	@PostMapping("manage/start")
 	public String getManageStart(Model model, Principal principal, @RequestParam("problemId") int problemId, @RequestParam("userGroupId") int userGroupId, 
 			@RequestParam("expireDate") Date expireDate) {
@@ -128,12 +159,22 @@ public class ProblemsController {
 		} else {
 			model.addAttribute("errorMsg", "Unable to find user group");
 		}
-		
-		model.addAttribute("problems", problemsRepository.findAllByUserUsername(principal.getName()).isPresent() ? 
+
+		return loadProblemsPage(model, principal);
+	}
+	/**
+	 * Unique function for the load of the information for the research page
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param principal Information for the login user
+	 *
+	 * @return to research page
+	 */
+	private String loadProblemsPage(Model model, Principal principal) {
+		model.addAttribute("problems", problemsRepository.findAllByUserUsername(principal.getName()).isPresent() ?
 				problemsRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>() );
 		model.addAttribute("usersGroup", userGroupRepository.findAllByUserUsername(principal.getName()).isPresent() ?
 				userGroupRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>());
 		return "problems/problems.html";
 	}
-	
 }

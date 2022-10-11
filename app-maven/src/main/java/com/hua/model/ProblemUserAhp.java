@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
+/**
+ * Class for the assign survey answers variables
+ */
 @Entity
 public class ProblemUserAhp {
 	

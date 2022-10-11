@@ -14,7 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.google.gson.Gson;
-
+/**
+ * Class for the Research variables
+ */
 @Entity
 public class Problem {
 	

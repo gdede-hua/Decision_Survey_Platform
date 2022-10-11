@@ -12,7 +12,9 @@ import com.hua.model.Menu;
 import com.hua.model.Users;
 import com.hua.repository.MenuRepository;
 import com.hua.repository.UsersRepository;
-
+/**
+ * On first start up save the menu into database
+ */
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 	@Value("${security.user.username}")

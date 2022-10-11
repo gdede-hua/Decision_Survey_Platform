@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * the Alternatives item
+ */
 @Entity
 public class Alternatives {
 	@Id

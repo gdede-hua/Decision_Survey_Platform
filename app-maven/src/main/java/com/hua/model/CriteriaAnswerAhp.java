@@ -7,7 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-
+/**
+ * the Criteria answer for the AHP algorithm
+ * it save the weight for each answer
+ */
 @Entity
 public class CriteriaAnswerAhp {
 	

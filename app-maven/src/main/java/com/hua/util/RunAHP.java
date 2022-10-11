@@ -30,7 +30,9 @@ import com.hua.repository.ProblemsUserRepository;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
-
+/**
+ * run the AHP algorithm
+ */
 @Service
 public class RunAHP {
 
@@ -41,7 +43,11 @@ public class RunAHP {
 		this.problemsUserRepository = problemsUserRepository;
 		this.problemsUserAHPRepository = problemsUserAHPRepository;
 	}
-
+	/**
+	 * run the AHP algorithm
+	 *
+	 * @param id the id of the survey
+	 */
 	public void runAHP(int id) {
 		Optional<List<ProblemUser>> problemUserListOpt = problemsUserRepository.findAllByProblemIdAndStatus(id, 2);
 		if (problemUserListOpt.isPresent()) {
@@ -233,16 +239,16 @@ public class RunAHP {
 		}
 
 	}
-
+	/**
+	 * run the AHP algorithm
+	 *
+	 * @return AHP the results of the answers
+	 */
 	public AHP runAHPeig(double[][] matrix) {
 
 		Matrix matrixEig = new Matrix(matrix);
-//		 System.out.println("--------------------------------- Matrix -----------------------------------");
-//		 System.out.println(jamaToString(matrixEig));
 
 		EigenvalueDecomposition e = matrixEig.eig();
-//		 System.out.println("----------- Diagonal -------------");
-//		 System.out.println(jamaToString(e.getD()));
 		double maxDiagonValue = 0.0;
 		int poisitionDiagonValue = 0;
 		for (int i = 0; i < e.getD().getRowDimension(); i++) {
@@ -252,8 +258,6 @@ public class RunAHP {
 			}
 		}
 		System.out.println("maxDiagonValue: " + maxDiagonValue + " | poisitionDiagonValue: " + poisitionDiagonValue);
-//		 System.out.println("----------- Vectors -------------");
-//		 System.out.println(jamaToString(e.getV()));
 		double sumRightVector = 0.0;
 		for (int i = 0; i < e.getV().getRowDimension(); i++) {
 			sumRightVector += Math.abs(e.getV().get(i, poisitionDiagonValue));
@@ -265,11 +269,6 @@ public class RunAHP {
 			System.out.println(
 					Math.abs(e.getV().get(i, poisitionDiagonValue)) + " / " + sumRightVector + " = " + weight[i]);
 		}
-		
-//		 System.out.println("----------- weight -------------");
-//		 for (int i = 0; i < weight.length; i++) {
-//			 System.out.println(weight[i]+" ");
-//		 }
 		 
 		double ci = (maxDiagonValue - e.getV().getRowDimension()) / (e.getV().getRowDimension() - 1);
 		System.out.println("CI= " + ci);
@@ -299,18 +298,4 @@ public class RunAHP {
 
 		return new AHP(weight, cr);
 	}
-//	private String jamaToString(Matrix m) {
-//	    StringBuilder b = new StringBuilder();
-//	    DecimalFormat df = new DecimalFormat("###.###");
-//	    b.append("[");
-//	    for(int i=0; i<m.getRowDimension(); i++) {
-//	        for(int j=0; j<m.getColumnDimension(); j++) {
-//	            b.append(df.format((m.get(i, j))) );
-//	            if(j<m.getColumnDimension() - 1) b.append(", ");
-//	        }
-//	        if(i<m.getRowDimension() - 1) b.append(";\n");
-//	    }
-//	    b.append("]");
-//	    return b.toString();
-//	}
 }

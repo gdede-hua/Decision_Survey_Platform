@@ -19,14 +19,14 @@ import com.hua.model.AlternativesCriteriaAnswerAhp;
 import com.hua.model.AlternativesFactorAnswerAhp;
 import com.hua.model.CriteriaAnswerAhp;
 import com.hua.model.FactorAnswerAhp;
-import com.hua.model.GenerateAhpResultsExcell;
-import com.hua.model.GenerateAhpResultsExcellWithSelection;
+import com.hua.model.GenerateAhpResultsExcel;
+import com.hua.model.GenerateAhpResultsExcelWithSelection;
 import com.hua.model.ProblemUserAhp;
 import com.hua.repository.ProblemsUserAhpRepository;
 
 public class GenerateAhpExcell {
 	public ResponseEntity<InputStreamResource> makeExceel(int id, ProblemsUserAhpRepository problemsUserAhpRepository, 
-			GenerateAhpResultsExcell generateAhpResultsExcell){
+			GenerateAhpResultsExcel generateAhpResultsExcell){
 		Optional<List<ProblemUserAhp>> problemUserAhpListOpt = problemsUserAhpRepository.findAllByProblemUserProblemId(id);
 		
 		if ( problemUserAhpListOpt.isPresent() ) {
@@ -35,7 +35,7 @@ public class GenerateAhpExcell {
 			workbook.createSheet("Persons");
 			for ( ProblemUserAhp problemUserAhp : problemUserAhpList ) {
 				
-				GenerateAhpResultsExcellWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcellWithSelection().stream()
+				GenerateAhpResultsExcelWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcelWithSelection().stream()
 						  .filter(generateAhpResultsExcellWithSelectionTmp -> generateAhpResultsExcellWithSelectionTmp.getUser().getUsername().equals(problemUserAhp.getProblemUser().getUser().getUsername()))
 						  .findFirst()
 						  .orElse(null);
@@ -66,13 +66,13 @@ public class GenerateAhpExcell {
 		return null;
 		
 	}
-	public void makeExceelSum(Workbook workbook, List<ProblemUserAhp> problemUserAhpList, GenerateAhpResultsExcell generateAhpResultsExcell) {
+	public void makeExceelSum(Workbook workbook, List<ProblemUserAhp> problemUserAhpList, GenerateAhpResultsExcel generateAhpResultsExcell) {
 		Sheet sheet = workbook.getSheet("Persons");
 		int countOfSheets=problemUserAhpList.size();
 		
 		Sheet sheetUser = null;
 		for ( ProblemUserAhp problemUserAhp : problemUserAhpList ) {
-			GenerateAhpResultsExcellWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcellWithSelection().stream()
+			GenerateAhpResultsExcelWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcelWithSelection().stream()
 					  .filter(generateAhpResultsExcellWithSelectionTmp -> generateAhpResultsExcellWithSelectionTmp.getUser().getUsername().equals(problemUserAhp.getProblemUser().getUser().getUsername()))
 					  .findFirst()
 					  .orElse(null);
@@ -98,7 +98,7 @@ public class GenerateAhpExcell {
 						if ( headerCellUser.getCellType().toString().equals("NUMERIC") ) {
 							String formula = "(";
 							for ( ProblemUserAhp problemUserAhp : problemUserAhpList ) {
-								GenerateAhpResultsExcellWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcellWithSelection().stream()
+								GenerateAhpResultsExcelWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcelWithSelection().stream()
 										  .filter(generateAhpResultsExcellWithSelectionTmp -> generateAhpResultsExcellWithSelectionTmp.getUser().getUsername().equals(problemUserAhp.getProblemUser().getUser().getUsername()))
 										  .findFirst()
 										  .orElse(null);

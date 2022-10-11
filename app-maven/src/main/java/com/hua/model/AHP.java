@@ -1,5 +1,8 @@
 package com.hua.model;
 
+/**
+ * Class for the AHP variables
+ */
 public class AHP {
 	private double[] weights;
 	private double cr;

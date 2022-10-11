@@ -7,12 +7,12 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import java.util.Base64;
-
+/**
+ * AES encryption for the user information
+ */
 public class AesEncryptor implements TextEncryptor {
 	
 	private static final String ALGO = "AES";
-//	private static final byte[] keyValue = new byte[] { 'T', 'h', 'e', 'B', 'e', 's', 't', 'S', 'e', 'c', 'r', 'e', 't',
-//			'K', 'e', 'y' };
 
 	private String secret;
 	public AesEncryptor(String secret) {

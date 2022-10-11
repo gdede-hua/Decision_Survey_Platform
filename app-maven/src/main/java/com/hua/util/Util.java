@@ -1,7 +1,11 @@
 package com.hua.util;
 
 public class Util {
-
+	/**
+	 * change the weight fo the answer the AHP mechanism
+	 *
+	 * @param weight the weight of the answer
+	 */
 	public static float weightReverse(float weight) {
 		float weightTmp = weight;
 		String weightString = ""+weight;

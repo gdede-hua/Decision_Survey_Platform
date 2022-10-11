@@ -10,6 +10,9 @@ import javax.persistence.OneToOne;
 
 import com.google.gson.Gson;
 
+/**
+ * the Alternatives Criteria answers
+ */
 @Entity
 public class AlternativesCriteriaAnswer {
 	@Id

@@ -7,7 +7,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hua.model.Menu;
-
+/**
+ * Interface for the menu communication with the database
+ */
 public interface MenuRepository extends JpaRepository<Menu, Integer>{
 	public Optional<List<Menu>> findAllByOrderByOrderIdAsc();
 	public Optional<List<Menu>> findAllByParentIdOrderByOrderIdAsc(int parentId);

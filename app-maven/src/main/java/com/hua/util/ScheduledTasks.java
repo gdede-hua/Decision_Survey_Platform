@@ -11,14 +11,19 @@ import org.springframework.stereotype.Component;
 
 import com.hua.model.ProblemUserExpire;
 import com.hua.repository.ProblemUserExpireRepository;
-
+/**
+ * check if a survey had expire
+ */
 @Component
 public class ScheduledTasks {
 
 	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
-	@Autowired
-	private ProblemUserExpireRepository problemUserExpireRepository;
+	private final ProblemUserExpireRepository problemUserExpireRepository;
+
+	public ScheduledTasks(ProblemUserExpireRepository problemUserExpireRepository) {
+		this.problemUserExpireRepository = problemUserExpireRepository;
+	}
 
 	@Scheduled(cron="0 40 20 * * ?")//cron="1 0 0 * * ?"
 	public void reportCurrentTime() {

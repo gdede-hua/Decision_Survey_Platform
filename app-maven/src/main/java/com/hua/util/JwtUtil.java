@@ -11,10 +11,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
+/**
+ * generate the key for the reset password mechanism
+ */
 @Service
 public class JwtUtil {
-	
 
 	@Value("${security.jwt.secret.key}")
     private String SECRET_KEY;

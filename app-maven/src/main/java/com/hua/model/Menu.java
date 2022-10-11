@@ -11,7 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import com.google.gson.Gson;
-
+/**
+ * Class for the Menu variables
+ */
 @Entity
 public class Menu {
 		

@@ -4,7 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+/**
+ * the Criteria answer for the AHP algorithm
+ * it save the CR
+ */
 @Entity
 public class CriteriaCrAhp {
 	@Id

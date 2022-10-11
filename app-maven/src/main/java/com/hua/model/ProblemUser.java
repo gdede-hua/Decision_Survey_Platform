@@ -13,7 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.google.gson.Gson;
-
+/**
+ * Class for the assign survey variables
+ */
 @Entity
 public class ProblemUser {
 	

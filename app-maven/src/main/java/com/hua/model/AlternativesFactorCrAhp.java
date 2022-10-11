@@ -7,7 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-
+/**
+ * the Alternatives Factor answers for the AHP algorithm
+ * it save the CR
+ */
 @Entity
 public class AlternativesFactorCrAhp {
 	@Id

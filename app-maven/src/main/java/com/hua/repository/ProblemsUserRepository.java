@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hua.model.ProblemUser;
-
+/**
+ * Interface for the survey communication with the database
+ */
 public interface ProblemsUserRepository extends JpaRepository<ProblemUser, Integer> {
 	public Optional<List<ProblemUser>> findAllByProblemId(int problemId);
 	public Optional<List<ProblemUser>> findAllByProblemIdAndStatus(int problemId, int Status);

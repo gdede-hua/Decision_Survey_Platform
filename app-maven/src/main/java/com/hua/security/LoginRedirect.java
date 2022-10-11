@@ -3,7 +3,9 @@ package com.hua.security;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+/**
+ * UI redirection rules
+ */
 @Configuration
 public class LoginRedirect implements WebMvcConfigurer {
 

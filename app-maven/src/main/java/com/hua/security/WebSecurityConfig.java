@@ -12,13 +12,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+/**
+ * App security configuration
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	
+
+	public WebSecurityConfig(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
@@ -40,8 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 		
 	}
-	@Autowired
-	private DataSource dataSource;
+	private final DataSource dataSource;
 	 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth)

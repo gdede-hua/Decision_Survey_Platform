@@ -4,7 +4,9 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import org.springframework.beans.factory.annotation.Value;
-
+/**
+ * encrypt the user information
+ */
 @Converter
 public class StringConverter implements AttributeConverter<String, String> {
 	

@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hua.model.Users;
-
+/**
+ * Interface for the users communication with the database
+ */
 public interface UsersRepository extends JpaRepository<Users, String> {
 
 	public Optional<Users> findByUsername(String username);

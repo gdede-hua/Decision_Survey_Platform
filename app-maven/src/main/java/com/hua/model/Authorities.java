@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
+/**
+ * Class for the Authorities
+ */
 @Entity
 public class Authorities implements Serializable {
 	

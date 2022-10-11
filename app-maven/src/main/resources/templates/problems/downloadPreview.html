@@ -20,18 +20,13 @@
 					<h1 th:inline="text">Download Preview</h1>
 				</div>
 				<div class="col">
-					<a th:href="@{/runAHP/excell/data/}+ ${problemsUserAhpId}"
+					<a th:href="@{/runAHP/excel/data/}+ ${problemsUserAhpId}"
 						class="btn btn-success btn-md float-right" download> <i
 						class="fas fa-download"></i> Download data
 					</a>
 				</div>
 			</div>
-
-			<!-- 	<div 
-				class="form-group text-center border p-1 col-md-2 col-sm-3 col-4" >
-				 -->
-
-			<form method="POST" th:action="@{/runAHP/excell}" download>
+			<form method="POST" th:action="@{/runAHP/excel}" download>
 				<input name="id" class="d-none" type="text" th:value="${problemsUserAhpId}" >
 											
 				<div class="accordion" id="accordion" th:each="problemsUserAHP, rowPualStat : ${problemsUserAhp}">

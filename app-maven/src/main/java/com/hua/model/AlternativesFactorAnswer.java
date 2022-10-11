@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.google.gson.Gson;
-
+/**
+ * the Alternatives Factor answers
+ */
 @Entity
 public class AlternativesFactorAnswer {
 	@Id

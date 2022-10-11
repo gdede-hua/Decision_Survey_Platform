@@ -18,7 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.hua.util.StringConverter;
-
+/**
+ * Class for the users variables
+ */
 @Entity
 public class Users implements Serializable{
 	
