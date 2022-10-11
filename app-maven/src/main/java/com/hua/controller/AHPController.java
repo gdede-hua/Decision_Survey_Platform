@@ -22,7 +22,7 @@ import com.hua.repository.ProblemsRepository;
 import com.hua.repository.ProblemsUserAhpRepository;
 import com.hua.repository.ProblemsUserRepository;
 import com.hua.repository.UsersGroupRepository;
-import com.hua.util.GenerateAhpExcell;
+import com.hua.util.GenerateAhpExcel;
 import com.hua.util.GenerateDataExcel;
 import com.hua.util.RunAHP;
 
@@ -91,7 +91,7 @@ public class AHPController {
 	@PostMapping("excel")
 	public ResponseEntity<InputStreamResource> getExcelAHP(@ModelAttribute GenerateAhpResultsExcel generateAhpResultsExcel) {
 		
-		return new GenerateAhpExcell().makeExceel(generateAhpResultsExcel.getId(), problemsUserAHPRepository, generateAhpResultsExcel);
+		return new GenerateAhpExcel().makeExcel(generateAhpResultsExcel.getId(), problemsUserAHPRepository, generateAhpResultsExcel);
 		
 	}
 	/**
@@ -103,7 +103,7 @@ public class AHPController {
 	@GetMapping("excel/data/{id}")
 	public ResponseEntity<InputStreamResource> getExcelData(@PathVariable int id) {
 				
-		return new GenerateDataExcel(problemsUserAHPRepository).makeExceel(id);
+		return new GenerateDataExcel(problemsUserAHPRepository).makeExcel(id);
 		
 	}
 }

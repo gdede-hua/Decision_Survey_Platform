@@ -42,7 +42,7 @@ public class GenerateDataExcel {
 		this.problemsUserAHPRepository = problemsUserAHPRepository;
 	}
 
-	public ResponseEntity<InputStreamResource> makeExceel(int id) {
+	public ResponseEntity<InputStreamResource> makeExcel(int id) {
 		Optional<List<ProblemUserAhp>> ProblemUserAhpListOpt = problemsUserAHPRepository.findAllByProblemUserProblemId(id);
 		if ( ProblemUserAhpListOpt.isPresent() ) {
 			List<ProblemUserAhp> problemUserAhpList = ProblemUserAhpListOpt.get();
@@ -50,7 +50,7 @@ public class GenerateDataExcel {
 			Workbook workbook = new XSSFWorkbook();
 			for ( ProblemUserAhp problemUserAhp : problemUserAhpList ) {
 				Sheet sheet = workbook.createSheet(problemUserAhp.getProblemUser().getUser().getUsername());
-				makeExceelPerUser(problemUserAhp, sheet);
+				makeExcelPerUser(problemUserAhp, sheet);
 			}
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -71,7 +71,7 @@ public class GenerateDataExcel {
 		}
 		return null;
 	}
-	public void makeExceelPerUser(ProblemUserAhp problemUserAhp, Sheet sheet) {
+	public void makeExcelPerUser(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		int rowCounter=0;
 		
 		ProblemUser problemUser = problemUserAhp.getProblemUser();
