@@ -11,6 +11,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_TCP_PORT=${MYSQL_PORT}
     volumes:
       - ./mysql/data:/var/lib/mysql
     healthcheck:
@@ -23,7 +24,7 @@ services:
     container_name: ${APP_HOST}
     build: ${APPLICATION_ROOT_FOLDER}
     ports:
-      - "8080:8080"
+      - ${SERVER_PORT}:${SERVER_PORT}
     depends_on:
       mysql:
         condition: service_healthy
@@ -37,6 +38,7 @@ services:
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_FROM=${MAIL_FROM}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - SERVER_PORT=${SERVER_PORT}
       - SYSTEM_DOMAIN=${SYSTEM_DOMAIN}
       - DEFAULT_USER=${DEFAULT_USER}
       - DEFAULT_PASSWORD=${DEFAULT_PASSWORD}

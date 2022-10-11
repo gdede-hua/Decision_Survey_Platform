@@ -37,7 +37,6 @@ class DecisionMakerApplicationTests {
 	@Autowired
 	private UsersRepository usersRepository;
 
-
 	@Autowired
 	private DatabaseLoader databaseLoader;
 	@Autowired
