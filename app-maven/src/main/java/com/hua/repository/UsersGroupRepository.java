@@ -10,5 +10,5 @@ import com.hua.model.Groups;
  * Interface for the user group communication with the database
  */
 public interface UsersGroupRepository extends JpaRepository<Groups, Integer> {
-	public Optional<List<Groups>> findAllByUserUsername(String username);
+	Optional<List<Groups>> findAllByUserUsername(String username);
 }

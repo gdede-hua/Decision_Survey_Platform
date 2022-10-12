@@ -10,5 +10,5 @@ import com.hua.model.Problem;
  * Interface for the research communication with the database
  */
 public interface ProblemsRepository extends JpaRepository<Problem, Integer> {
-	public Optional<List<Problem>> findAllByUserUsername(String username);
+	Optional<List<Problem>> findAllByUserUsername(String username);
 }

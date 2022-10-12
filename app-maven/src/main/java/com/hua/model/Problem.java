@@ -1,5 +1,6 @@
 package com.hua.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,7 +19,7 @@ import com.google.gson.Gson;
  * Class for the Research variables
  */
 @Entity
-public class Problem {
+public class Problem implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +49,13 @@ public class Problem {
 	}
 	public Problem(int id, String name, String description, Users user, List<Criteria> criteria, List<Alternatives> alternatives) {
 		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.user = user;
+		this.criteria = criteria;
+		this.alternatives = alternatives;
+	}
+	public Problem(String name, String description, Users user, List<Criteria> criteria, List<Alternatives> alternatives) {
 		this.name = name;
 		this.description = description;
 		this.user = user;

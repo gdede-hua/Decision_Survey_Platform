@@ -39,7 +39,13 @@ public class Groups {
 		this.user = user;
 		this.users = users;
 	}
-	
+	public Groups(String name, String description, Users user, List<Users> users) {
+		this.name = name;
+		this.description = description;
+		this.user = user;
+		this.users = users;
+	}
+
 	public int getId() {
 		return id;
 	}

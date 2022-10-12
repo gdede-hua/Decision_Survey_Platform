@@ -3,6 +3,7 @@ package com.hua.gr;
 import com.hua.controller.*;
 import com.hua.repository.*;
 import com.hua.util.*;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,29 +50,73 @@ class DecisionMakerApplicationTests {
 	private ScheduledTasks scheduledTasks;
 
 	@Test
-	void controllerLoads() {
+	void ahpControllerLoads() {
 		assertThat(ahpController).isNotNull();
+	}
+	@Test
+	void mainControllerLoads() {
 		assertThat(mainController).isNotNull();
+	}
+	@Test
+	void problemsControllerLoads() {
 		assertThat(problemsController).isNotNull();
+	}
+	@Test
+	void problemsUserControllerLoads() {
 		assertThat(problemsUserController).isNotNull();
+	}
+	@Test
+	void usersControllerLoads() {
 		assertThat(usersController).isNotNull();
 	}
+
 	@Test
-	void repositoryLoads() {
+	void menuRepositoryLoads() {
 		assertThat(menuRepository).isNotNull();
-		assertThat(problemsRepository).isNotNull();
-		assertThat(problemsUserAhpRepository).isNotNull();
-		assertThat(problemsUserRepository).isNotNull();
-		assertThat(problemUserExpireRepository).isNotNull();
-		assertThat(usersGroupRepository).isNotNull();
-		assertThat(usersRepository).isNotNull();
 	}
 	@Test
-	void utilServiceLoads() {
+	void problemsRepositoryLoads() {
+		assertThat(problemsRepository).isNotNull();
+	}
+	@Test
+	void problemsUserAhpRepositoryLoads() {
+		assertThat(problemsUserAhpRepository).isNotNull();
+	}
+	@Test
+	void problemsUserRepositoryLoads() {
+		assertThat(problemsUserRepository).isNotNull();
+	}
+	@Test
+	void problemUserExpireRepositoryLoads() {
+		assertThat(problemUserExpireRepository).isNotNull();
+	}
+	@Test
+	void usersGroupRepositoryLoads() {
+		assertThat(usersGroupRepository).isNotNull();
+	}
+	@Test
+	void usersRepositoryLoads() {
+		assertThat(usersRepository).isNotNull();
+	}
+
+	@Test
+	void databaseLoaderLoads() {
 		assertThat(databaseLoader).isNotNull();
+	}
+	@Test
+	void generateDataExcelLoads() {
 		assertThat(generateDataExcel).isNotNull();
+	}
+	@Test
+	void jwtUtilLoads() {
 		assertThat(jwtUtil).isNotNull();
+	}
+	@Test
+	void runAHPLoads() {
 		assertThat(runAHP).isNotNull();
+	}
+	@Test
+	void scheduledTasksLoads() {
 		assertThat(scheduledTasks).isNotNull();
 	}
 }

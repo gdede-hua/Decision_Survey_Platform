@@ -11,8 +11,8 @@ import com.hua.model.Users;
  */
 public interface UsersRepository extends JpaRepository<Users, String> {
 
-	public Optional<Users> findByUsername(String username);
-	public Optional<Users> findByEmailAndEnabled(String email, int enabled);
-	public List<Users> findAllByAuthoritiesAuthorityAndEnabled(String role, int enabled);
+	Optional<Users> findByUsername(String username);
+	Optional<Users> findByEmailAndEnabled(String email, int enabled);
+	List<Users> findAllByAuthoritiesAuthorityAndEnabled(String role, int enabled);
 
 }

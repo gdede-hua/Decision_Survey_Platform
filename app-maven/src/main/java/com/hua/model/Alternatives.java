@@ -23,6 +23,9 @@ public class Alternatives {
 		this.id = id;
 		this.name = name;
 	}
+	public Alternatives(String name) {
+		this.name = name;
+	}
 	
 	public int getId() {
 		return id;

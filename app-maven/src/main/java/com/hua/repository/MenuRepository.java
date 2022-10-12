@@ -11,8 +11,6 @@ import com.hua.model.Menu;
  * Interface for the menu communication with the database
  */
 public interface MenuRepository extends JpaRepository<Menu, Integer>{
-	public Optional<List<Menu>> findAllByOrderByOrderIdAsc();
-	public Optional<List<Menu>> findAllByParentIdOrderByOrderIdAsc(int parentId);
-	public Optional<List<Menu>> findAllByParentIdAndRoleOrderByOrderIdAsc(int parentId, String role);
+	Optional<List<Menu>> findAllByParentIdAndRoleOrderByOrderIdAsc(int parentId, String role);
 	
 }
