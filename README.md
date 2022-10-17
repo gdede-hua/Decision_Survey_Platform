@@ -36,6 +36,14 @@ The MySQL port is 3306.
 
 In case one would like to edit the above ports he/she may edit the .env file.
 
+### Credentials
+The are default administrator and user accounts and the related credentials are presented below:
+DEFAULT_USER=admin
+DEFAULT_PASSWORD=password
+
+DEFAULT_USER=user
+DEFAULT_PASSWORD=password
+
 
 ## Usage
 The tool is user friendly with clear - easy to follow - procedures.
