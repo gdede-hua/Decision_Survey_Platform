@@ -30,6 +30,13 @@ If you want to run the project with docker then in the `Decision_Survey_Platform
 docker-compose up
 ```
 
+### Docker Ports
+The application port is 8080.
+The MySQL port is 3306.
+
+In case one would like to edit the above ports he/she may edit the .env file.
+
+
 ## Usage
 The tool is user friendly with clear - easy to follow - procedures.
 
