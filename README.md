@@ -48,6 +48,7 @@ DEFAULT_SIMPLE_USER=user
 
 DEFAULT_SIMPLE_PASSWORD=password
 
+In case one would like to edit the above ports he/she may edit the .env file.
 
 ## Usage
 The tool is user friendly with clear - easy to follow - procedures.
