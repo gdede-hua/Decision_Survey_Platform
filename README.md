@@ -104,6 +104,28 @@ Below you may find example answers for an assigned research.
 ![Survey](blob/survey.png)
 ![Survey Run](blob/surveyAnswers.png)
 
+## Code Information's
+
+![Generate results](blob/code.png)
+
+* The package `com.hua.controller` have all the controllers needed for communication with the Frontend.
+* The package `com.hua.model` have all the models of the app.
+* The package `com.hua.repository` have all the JPA endpoints which the app uses.
+* The package `com.hua.security` have the security of the app.
+* The package `com.hua.util` have some general classes.
+  * The class `com.hua.util.AesEncryptor` used for sensitive information encryption.
+  * The class `com.hua.util.DatabaseLoader` used onm first start up to create the default users and the menu.
+  * The class `com.hua.util.GenerateAhpExcel` create an Excel with the research results.
+  * The class `com.hua.util.GenerateDataExcel` Create ab Excel with th survey answers.
+  * The class `com.hua.util.JwtUtil` used to generate unique token for the reset password mechanism.
+  * The class `com.hua.util.Mailer` send email to users like for the reset password.
+  * The class `com.hua.util.RunAHP` it execute the AHP algorithm.
+  * The class `com.hua.util.ScheduledTasks` check if a survey had expire.
+  * The class `com.hua.util.ScheduledTasks` used for sensitive information encryption.
+* The folder `resources` have the front end interface.
+* The folder `test.java` have the JUnit tests.
+* The file `application.properties` have all the necessary properties for the dataBase e.g.
+
 ## General Guidelines
 -Third parties that want to contribute to the software may have access to the related files and the source code.
 
