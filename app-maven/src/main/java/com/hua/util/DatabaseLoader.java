@@ -17,10 +17,15 @@ import com.hua.repository.UsersRepository;
  */
 @Component
 public class DatabaseLoader implements CommandLineRunner {
+	@Value("${security.admin.username}")
+    private String usernameAdmin;
+	@Value("${security.admin.password}")
+    private String passwordAdmin;
+
 	@Value("${security.user.username}")
-    private String username;
+	private String usernameUser;
 	@Value("${security.user.password}")
-    private String password;
+	private String passwordUser;
 
 	private final UsersRepository userRepository;
 	private final MenuRepository menuRepository;
@@ -36,7 +41,9 @@ public class DatabaseLoader implements CommandLineRunner {
 		
 		if ( userRepository.findAll().size() == 0) {
 			String uuid = UUID.randomUUID().toString();
-			userRepository.save(new Users(uuid, username, password, "Admin User", "admin@hua.gr", 1, new Authorities(uuid, username, "ROLE_ADMIN")));
+			userRepository.save(new Users(uuid, usernameAdmin, passwordAdmin, "Admin User", "admin@hua.gr", 1, new Authorities(uuid, usernameAdmin, "ROLE_ADMIN")));
+			uuid = UUID.randomUUID().toString();
+			userRepository.save(new Users(uuid, usernameUser, passwordUser, "Simple User", "simple@hua.gr", 1, new Authorities(uuid, usernameUser, "ROLE_USER")));
 		}
 		
 		if (menuRepository.findAll().size() == 0) {
