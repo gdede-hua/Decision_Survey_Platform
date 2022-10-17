@@ -39,14 +39,14 @@ In case one would like to edit the above ports he/she may edit the .env file.
 ### Credentials
 The are default administrator and user accounts and the related credentials are presented below:
 
-DEFAULT_USER=admin
+DEFAULT_ADMIN_USER=admin
 
-DEFAULT_PASSWORD=password
+DEFAULT_ADMIN_PASSWORD=password
 
 
-DEFAULT_USER=user
+DEFAULT_SIMPLE_USER=user
 
-DEFAULT_PASSWORD=password
+DEFAULT_SIMPLE_PASSWORD=password
 
 
 ## Usage
