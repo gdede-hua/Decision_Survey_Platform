@@ -154,8 +154,8 @@ main screen as presented below:
 
 ## Creating a Survey
 
-The administrator will have to complete a series of simple PWC forms for the
-creation of a survey. The AHP methodology requires the PWC survey to have at
+The administrator will have to complete a series of simple forms for the
+creation of a survey. The AHP methodology requires the survey to have at
 least one criterion, at least one factor for each criterion and at least
 one alternative. The administrator will have to provide the name and a
 description for each element. The administrator can edit the survey
@@ -169,7 +169,7 @@ link in the sidebar.
 
 ## Group of Users
 
-When the survey is created, the next step is to make a user group of users to answer the PWC researches. This can be achieved by pressing the `Group of Users` button in the sidebar.
+When the survey is created, the next step is to make a user group of users to answer the PWC forms that will be created in the context of the research as per the AHP. This can be achieved by pressing the `Group of Users` button in the sidebar.
 
 ![Make Users Group](blob/userGroup.png)
 
@@ -193,9 +193,9 @@ By clicking the `Download Preview` button, we can get the results in an Excel fi
 # User 
 
 The user is more simplified than the administrator. A user is only able
-to fill in an assigned survey and display previous results. 
+to fill in the PWC forms of an assigned survey and display previous results. 
 
-Example answers for an assigned survey are presented below.
+Example answers for an assigned survey and the form that the user may fill in, in the context of PWC based on AHP, are presented below. The user can choose values from a specific scale as defined by the administrator according to tha AHP.
 
 ![Survey](blob/survey.png)
 ![Survey Run](blob/surveyAnswers.png)
@@ -203,8 +203,8 @@ Example answers for an assigned survey are presented below.
 # Example
 This section provides an example of the tool usefulness for a real case scenario. 
 We consider the scenario of deciding which is the suitable technology to use in the vision of the all optical house. 
-According to the AHP alternative technological have to be identified and ranked based. 
-Towards this end, the administrator creates the PWC surveys/researches defining the criteria, factors under each criteria and alternative technological scenarios. 
+According to the AHP alternative technological have to be identified and ranked based based on AHP.. 
+Towards this end, the administrator creates the survey defining the criteria, factors under each criterion and alternative technological scenarios. 
 More specifically, the above alternatives are considered:
 - T1. Infrared 
 - T2. Power Line Communications (PLC)
@@ -232,7 +232,8 @@ The Factors under each criterion C3 follow:
 - F33. Usability
 - F34. Compatibility with legacy systems
 
-In this context the administrator creates 15 PWC researches in order to be filled in by the experts/users. More specifically:
+In this context the administrator creates a survey with 15 PWC forms in order to be filled in by the experts/users. A PWC form is presented abobve in the Section User.
+In the context of PWC the user compares the involved elements in pairs of two answering each time to the question which element of the two is more important for the all optical house. More specifically:
 - PWC of the Criteria
 - PWC of the Factors under C1
 - PWC of the Factors under C2
@@ -249,7 +250,7 @@ In this context the administrator creates 15 PWC researches in order to be fille
 - PWC of alternative technologies under F33.
 - PWC of alternative technologies under F34.
 
-Based on the above, 15 experts/users are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion as well as the performance of the technological alternatives under each factor. 
+Based on the above, 15 experts/users are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion (which one is more important factor for each criterion) as well as the performance of the technological alternatives under each factor (which technolohy has a higher performance for each factor). The experts fill in the PWC forms choosing values from a certain scale defined by the administrator based on the AHP.
 
 Once the experts have filled in the PWC researched then the administrator can press generate data in order the algorithm to estimate the weights of importance of criteria $w_{k}$ , factors $f_{jk}$ under each criterion and relative importance of alterantive technologies $S_{ijk}$ and the final priorities $T_{i}$ of the technologies as described in the AHP approach described above.
 
