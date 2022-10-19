@@ -154,8 +154,8 @@ main screen as presented below:
 
 ## Creating a Survey
 
-The administrator will have to complete a series of simple forms for the
-creation of a survey. The AHP methodology requires the survey to have at
+The administrator will have to complete a series of simple PWC forms for the
+creation of a survey. The AHP methodology requires the PWC survey to have at
 least one criterion, at least one factor for each criterion and at least
 one alternative. The administrator will have to provide the name and a
 description for each element. The administrator can edit the survey
@@ -169,7 +169,7 @@ link in the sidebar.
 
 ## Group of Users
 
-When the survey is created, the next step is to make a user group of users to answer the research. This can be achieved by pressing the `Group of Users` button in the sidebar.
+When the survey is created, the next step is to make a user group of users to answer the PWC researches. This can be achieved by pressing the `Group of Users` button in the sidebar.
 
 ![Make Users Group](blob/userGroup.png)
 
@@ -232,7 +232,7 @@ The Factors under each criterion C3 follow:
 - F33. Usability
 - F34. Compatibility with legacy systems
 
-In this context the administrator creates 15 researches/surveys in order to be filled in by the experts. More specifically:
+In this context the administrator creates 15 PWC researches in order to be filled in by the experts/users. More specifically:
 - 1. PWC of the Criteria
 - 2. PWC of the Factors under C1
 - 3. PWC of the Factors under C2
@@ -249,8 +249,8 @@ In this context the administrator creates 15 researches/surveys in order to be f
 - 14. PWC of alternative technologies under F33.
 - 15. PWC of alternative technologies under F34.
 
-Based on the above, 15 experts are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion as well as the performance of the technological alternatives under each factor. The
-importance of the various criteria involved in the deployment
-of the network is evaluated and discussed. The
+Based on the above, 15 experts/users are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion as well as the performance of the technological alternatives under each factor. 
+
+Once the experts have filled in the PWC researched then the administrator can press generate data in order the algorithm to estimate the weights of importance of criteria $w_{k}$ , factors $f_{jk}$ under each criterion and relative importance of alterantive technologies $S_{ijk}$ and the final priorities $T_{i}$ of the technologies as described in the AHP approach described above.
 
 # References
