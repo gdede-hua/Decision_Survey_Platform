@@ -23,7 +23,7 @@ Open a command line and run the following commands
 git clone https://github.com/gdede-hua/Decision_Survey_Platform.git
 cd Decision_Survey_Platform
 ```
->Note: We strongly suggest to adjust the .env file according to your needs, as it contains sensitive data.
+> Note: We strongly suggest to adjust the .env file according to your needs, as it contains sensitive data.
 
 If you want to run the project with docker then in the `Decision_Survey_Platform` folder run.
 ```
