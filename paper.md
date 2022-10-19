@@ -233,21 +233,21 @@ The Factors under each criterion C3 follow:
 - F34. Compatibility with legacy systems
 
 In this context the administrator creates 15 PWC researches in order to be filled in by the experts/users. More specifically:
-- 1. PWC of the Criteria
-- 2. PWC of the Factors under C1
-- 3. PWC of the Factors under C2
-- 4. PWC of the Factors under C3
-- 5. PWC of alternative technologies under F11.
-- 6. PWC of alternative technologies under F12.
-- 7. PWC of alternative technologies under F13.
-- 8. PWC of alternati ve technologies under F14.
-- 9. PWC of alternative technologies under F21.
-- 10. PWC of alternative technologies under F22.
-- 11. PWC of alternative technologies under F23.
-- 12. PWC of alternative technologies under F31.
-- 13. PWC of alternative technologies under F32.
-- 14. PWC of alternative technologies under F33.
-- 15. PWC of alternative technologies under F34.
+- PWC of the Criteria
+- PWC of the Factors under C1
+- PWC of the Factors under C2
+- PWC of the Factors under C3
+- PWC of alternative technologies under F11.
+- PWC of alternative technologies under F12.
+- PWC of alternative technologies under F13.
+- PWC of alternati ve technologies under F14.
+- PWC of alternative technologies under F21.
+- PWC of alternative technologies under F22.
+- PWC of alternative technologies under F23.
+- PWC of alternative technologies under F31.
+- PWC of alternative technologies under F32.
+- PWC of alternative technologies under F33.
+- PWC of alternative technologies under F34.
 
 Based on the above, 15 experts/users are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion as well as the performance of the technological alternatives under each factor. 
 
