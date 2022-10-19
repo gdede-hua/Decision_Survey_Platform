@@ -200,6 +200,57 @@ Example answers for an assigned survey are presented below.
 ![Survey](blob/survey.png)
 ![Survey Run](blob/surveyAnswers.png)
 
+# Example
+This section provides an example of the tool usefulness for a real case scenario. 
+We consider the scenario of deciding which is the suitable technology to use in the vision of the all optical house. 
+According to the AHP alternative technological have to be identified and ranked based. 
+Towards this end, the administrator creates the PWC surveys/researches defining the criteria, factors under each criteria and alternative technological scenarios. 
+More specifically, the above alternatives are considered:
+- T1. Infrared 
+- T2. Power Line Communications (PLC)
+- T3. Visible Light Communications (VLC)
 
+The criteria defined are presented below:
+- C1. Performance
+- C2. Economic Issues
+- C3. Social Acceptance
+
+The Factors under each criterion C1 are described below:
+- F11. Reach
+- F12. Coverage
+- F13. Downstream Throughput
+- F14. Upstream Throughput
+
+The Factors under each criterion C2 are listed below:
+- F21. Cost of Installation
+- F22. Cost of Equipment
+- F23. Installation Cost
+
+The Factors under each criterion C3 follow:
+- F31. Health Issues
+- F32. Home Integration with no new wires/Design
+- F33. Usability
+- F34. Compatibility with legacy systems
+
+In this context the administrator creates 15 researches/surveys in order to be filled in by the experts. More specifically:
+- 1. PWC of the Criteria
+- 2. PWC of the Factors under C1
+- 3. PWC of the Factors under C2
+- 4. PWC of the Factors under C3
+- 5. PWC of alternative technologies under F11.
+- 6. PWC of alternative technologies under F12.
+- 7. PWC of alternative technologies under F13.
+- 8. PWC of alternati ve technologies under F14.
+- 9. PWC of alternative technologies under F21.
+- 10. PWC of alternative technologies under F22.
+- 11. PWC of alternative technologies under F23.
+- 12. PWC of alternative technologies under F31.
+- 13. PWC of alternative technologies under F32.
+- 14. PWC of alternative technologies under F33.
+- 15. PWC of alternative technologies under F34.
+
+Based on the above, 15 experts are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion as well as the performance of the technological alternatives under each factor. The
+importance of the various criteria involved in the deployment
+of the network is evaluated and discussed. The
 
 # References
