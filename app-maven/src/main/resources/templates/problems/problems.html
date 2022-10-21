@@ -78,12 +78,6 @@
 							<a th:href="@{/runAHP/downloadPreview/} + ${problem.id}" class="btn btn-success btn-sm">
 							  	<i class="fas fa-download"></i> Download Preview
 							</a>
-							<!-- <a th:href="@{/runAHP/excell/} + ${problem.id}" class="btn btn-success btn-sm" download>
-							  	<i class="fas fa-download"></i> Download
-							</a>
-							<a th:href="@{/runAHP/excell/data/} + ${problem.id}" class="btn btn-success btn-sm" download>
-							  	<i class="fas fa-download"></i> Download data
-							</a> -->
 						</td>
 						<td><a th:if="${problem.status==1}" class="btn btn-primary btn-sm" th:href="@{/problems/wizard/} + ${problem.id}"><i class="fas fa-pencil-alt"></i> Edit</a></td>
 						<td><a th:if="${problem.status==1}" class="btn btn-danger btn-sm" th:href="@{/problems/manage/delete/} + ${problem.id}"><i class="fas fa-trash-alt"></i> Delete</a></td>

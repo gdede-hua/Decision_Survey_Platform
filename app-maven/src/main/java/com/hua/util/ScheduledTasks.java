@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.hua.model.ProblemUserExpire;
 import com.hua.repository.ProblemUserExpireRepository;
-/**
- * check if a survey had expire
- */
+
 @Component
 public class ScheduledTasks {
 
@@ -25,6 +23,9 @@ public class ScheduledTasks {
 		this.problemUserExpireRepository = problemUserExpireRepository;
 	}
 
+	/**
+	 * check if a survey had expire
+	 */
 	@Scheduled(cron="0 40 20 * * ?")//cron="1 0 0 * * ?"
 	public void reportCurrentTime() {
 		log.info("----- Execute Scheduler -----");

@@ -36,8 +36,8 @@ import Jama.Matrix;
 @Service
 public class RunAHP {
 
-	private ProblemsUserRepository problemsUserRepository;
-	private ProblemsUserAhpRepository problemsUserAHPRepository;
+	private final ProblemsUserRepository problemsUserRepository;
+	private final ProblemsUserAhpRepository problemsUserAHPRepository;
 
 	public RunAHP(ProblemsUserRepository problemsUserRepository, ProblemsUserAhpRepository problemsUserAHPRepository) {
 		this.problemsUserRepository = problemsUserRepository;
@@ -57,188 +57,250 @@ public class RunAHP {
 				ProblemUserAhp problemUserAhp = new ProblemUserAhp();
 				problemUserAhp.setProblemUser(new ProblemUser(problemUser.getId(), problemUser.getUser()));
 				List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
-				if (criteriaList.size() > 0) {
 
-					System.out.println(
-							"--------------------------------- Run Criteria  -----------------------------------");
-					double[][] matrixCriteria = new double[criteriaList.size()][criteriaList.size()];
-					for (int i = 0; i < criteriaList.size(); i++) {
-						for (int j = 0; j < criteriaList.size(); j++) {
-							if (i != j) {
-								final int iFinal = i;
-								final int jFinal = j;
-								CriteriaAnswer criteriaAnswer = problemUser.getCriteriaAnswer().stream()
-										.filter(criteriaAnswerTmp -> criteriaAnswerTmp.getCriteriaTop()
-												.getId() == criteriaList.get(iFinal).getId()
-												&& criteriaAnswerTmp.getCriteriaLeft().getId() == criteriaList
-														.get(jFinal).getId())
-										.findAny().orElse(null);
-								if (criteriaAnswer != null)
-									matrixCriteria[i][j] = criteriaAnswer.getWeight();
-								else
-									matrixCriteria[i][j] = 1;
-							} else
-								matrixCriteria[i][j] = 1;
-						}
-					}
-					AHP ahpDataCriteria = runAHPeig(matrixCriteria);
-					List<CriteriaAnswerAhp> criteriaAnswerAHPList = new ArrayList<>();
-					for (int i = 0; i < criteriaList.size(); i++) {
-						criteriaAnswerAHPList.add(new CriteriaAnswerAhp(new Criteria(criteriaList.get(i).getId()),
-								(float) ahpDataCriteria.getWeights()[i]));
-					}
-					problemUserAhp.setCriteriaCrAhp(new CriteriaCrAhp((float) ahpDataCriteria.getCr()));
-					problemUserAhp.setCriteriaAnswerAhp(criteriaAnswerAHPList);
-				}
-				System.out.println(
-						"--------------------------------- Complete Criteria  -----------------------------------");
+				criteriaAhp(problemUser, problemUserAhp, criteriaList);
 
-				List<FactorAnswerAhp> factorAnswerAHPList = new ArrayList<>();
-				List<FactorCrAhp> factorCrAhpList = new ArrayList<>();
-				for (Criteria criteria : criteriaList) {
-					if (criteria.getFactor().size() > 1) {
-						System.out.println("--------------------------------- Run Facto for Criteria: "
-								+ criteria.getName() + "  -----------------------------------");
-						List<Factor> factorList = criteria.getFactor();
-						double[][] matrixFactor = new double[factorList.size()][factorList.size()];
-						for (int i = 0; i < factorList.size(); i++) {
-							for (int j = 0; j < factorList.size(); j++) {
-								if (i != j) {
-									final int iFinal = i;
-									final int jFinal = j;
-									FactorAnswer factorAnswer = problemUser.getFactorAnswer().stream()
-											.filter(factorAnswerTmp -> factorAnswerTmp.getFactorTop()
-													.getId() == factorList.get(iFinal).getId()
-													&& factorAnswerTmp.getFactorLeft().getId() == factorList.get(jFinal)
-															.getId()
-													&& factorAnswerTmp.getCriteria().getId() == criteria.getId())
-											.findAny().orElse(null);
-									if (factorAnswer != null)
-										matrixFactor[i][j] = factorAnswer.getWeight();
-									else
-										matrixFactor[i][j] = 1;
-								} else
-									matrixFactor[i][j] = 1;
-							}
-						}
-						AHP ahpDataFactor = runAHPeig(matrixFactor);
-						for (int i = 0; i < factorList.size(); i++) {
-							factorAnswerAHPList.add(new FactorAnswerAhp(new Criteria(criteria.getId()),
-									new Factor(factorList.get(i).getId()), (float) ahpDataFactor.getWeights()[i]));
-						}
-						factorCrAhpList
-								.add(new FactorCrAhp(new Criteria(criteria.getId()), (float) ahpDataFactor.getCr()));
-					}
-				}
-				problemUserAhp.setFactorCrAhp(factorCrAhpList);
-				problemUserAhp.setFactorAnswerAhp(factorAnswerAHPList);
-				System.out.println(
-						"--------------------------------- Complete Factor  -----------------------------------");
+				factorsForCriteriaAhp(problemUser, problemUserAhp, criteriaList);
 
-				List<AlternativesCriteriaAnswerAhp> alternativesCriteriaAnswerAHPList = new ArrayList<>();
-				List<AlternativesCriteriaCrAhp> alternativesCriteriaCrAHPList = new ArrayList<>();
-				for (Criteria criteria : criteriaList) {
-					if (criteria.getFactor().size() == 0) {
-						System.out.println("--------------------------------- Run Alternatives for Criteria: "
-								+ criteria.getName() + "  -----------------------------------");
-						List<Alternatives> alternativesList = problemUser.getProblem().getAlternatives();
-						if (alternativesList.size() > 0) {
-							double[][] matrixAlternatives = new double[alternativesList.size()][alternativesList
-									.size()];
-							for (int i = 0; i < alternativesList.size(); i++) {
-								for (int j = 0; j < alternativesList.size(); j++) {
-									if (i != j) {
-										final int iFinal = i;
-										final int jFinal = j;
-										AlternativesCriteriaAnswer alternativesCriteriaAnswer = problemUser
-												.getAlternativesCriteriaAnswer().stream()
-												.filter(alternativesCriteriaTmp -> alternativesCriteriaTmp
-														.getAlternativesTop()
-														.getId() == alternativesList.get(iFinal).getId()
-														&& alternativesCriteriaTmp.getAlternativesLeft()
-																.getId() == alternativesList.get(jFinal).getId()
-														&& alternativesCriteriaTmp.getCriteria().getId() == criteria
-																.getId())
-												.findAny().orElse(null);
-										if (alternativesCriteriaAnswer != null)
-											matrixAlternatives[i][j] = alternativesCriteriaAnswer.getWeight();
-										else
-											matrixAlternatives[i][j] = 1;
+				alternativesForCriteriaAhp(problemUser, problemUserAhp, criteriaList);
 
-									} else
-										matrixAlternatives[i][j] = 1;
-								}
-							}
-							AHP ahpDataAlternatives = runAHPeig(matrixAlternatives);
-							for (int i = 0; i < alternativesList.size(); i++) {
-								alternativesCriteriaAnswerAHPList
-										.add(new AlternativesCriteriaAnswerAhp(new Criteria(criteria.getId()),
-												new Alternatives(alternativesList.get(i).getId()),
-												(float) ahpDataAlternatives.getWeights()[i]));
-							}
-							alternativesCriteriaCrAHPList.add(new AlternativesCriteriaCrAhp(
-									new Criteria(criteria.getId()), (float) ahpDataAlternatives.getCr()));
-						}
-					}
-				}
-				problemUserAhp.setAlternativesCriteriaCrAhp(alternativesCriteriaCrAHPList);
-				problemUserAhp.setAlternativesCriteriaAnswerAhp(alternativesCriteriaAnswerAHPList);
-				System.out.println(
-						"--------------------------------- Complete Criteria Alternatives  -----------------------------------");
-
-				ArrayList<Factor> factorList = new ArrayList<>();
-				for (Criteria criteria : problemUser.getProblem().getCriteria()) {
-					for (Factor factor : criteria.getFactor()) {
-						factorList.add(factor);
-					}
-				}
-				List<AlternativesFactorAnswerAhp> alternativesFactorAnswerAHPList = new ArrayList<>();
-				List<AlternativesFactorCrAhp> alternativesFactorCrAHPList = new ArrayList<>();
-				for (Factor factor : factorList) {
-					System.out.println("--------------------------------- Run Alternatives for Factors: "
-							+ factor.getName() + "  -----------------------------------");
-					List<Alternatives> alternativesList = problemUser.getProblem().getAlternatives();
-					if (alternativesList.size() > 0) {
-						double[][] matrixAlternatives = new double[alternativesList.size()][alternativesList.size()];
-						for (int i = 0; i < alternativesList.size(); i++) {
-							for (int j = 0; j < alternativesList.size(); j++) {
-								if (i != j) {
-									final int iFinal = i;
-									final int jFinal = j;
-									AlternativesFactorAnswer alternativesFactorAnswer = problemUser
-											.getAlternativesFactorAnswer().stream()
-											.filter(alternativesFactorTmp -> alternativesFactorTmp.getAlternativesTop()
-													.getId() == alternativesList.get(iFinal).getId()
-													&& alternativesFactorTmp.getAlternativesLeft()
-															.getId() == alternativesList.get(jFinal).getId()
-													&& alternativesFactorTmp.getFactor().getId() == factor.getId())
-											.findAny().orElse(null);
-									if (alternativesFactorAnswer != null)
-										matrixAlternatives[i][j] = alternativesFactorAnswer.getWeight();
-									else
-										matrixAlternatives[i][j] = 1;
-
-								} else
-									matrixAlternatives[i][j] = 1;
-							}
-						}
-						AHP ahpDataAlternatives = runAHPeig(matrixAlternatives);
-						for (int i = 0; i < alternativesList.size(); i++) {
-							alternativesFactorAnswerAHPList.add(new AlternativesFactorAnswerAhp(
-									new Factor(factor.getId()), new Alternatives(alternativesList.get(i).getId()),
-									(float) ahpDataAlternatives.getWeights()[i]));
-						}
-						alternativesFactorCrAHPList.add(new AlternativesFactorCrAhp(new Factor(factor.getId()),
-								(float) ahpDataAlternatives.getCr()));
-					}
-				}
-				problemUserAhp.setAlternativesFactorCrAhp(alternativesFactorCrAHPList);
-				problemUserAhp.setAlternativesFactorAnswerAhp(alternativesFactorAnswerAHPList);
-				problemsUserAHPRepository.save(problemUserAhp);
+				alternativesForFactorsAhp(problemUser, problemUserAhp);
 			}
 		}
 
 	}
+
+	/**
+	 * Run tha AHP algorithm and save the results for the alternatives of factors
+	 */
+	private void alternativesForFactorsAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp) {
+		ArrayList<Factor> factorList = new ArrayList<>();
+		for (Criteria criteria : problemUser.getProblem().getCriteria()) {
+			factorList.addAll(criteria.getFactor());
+		}
+		List<AlternativesFactorAnswerAhp> alternativesFactorAnswerAHPList = new ArrayList<>();
+		List<AlternativesFactorCrAhp> alternativesFactorCrAHPList = new ArrayList<>();
+		for (Factor factor : factorList) {
+			System.out.println("--------------------------------- Run Alternatives for Factors: "
+					+ factor.getName() + "  -----------------------------------");
+			List<Alternatives> alternativesList = problemUser.getProblem().getAlternatives();
+			if (alternativesList.size() > 0) {
+				double[][] matrix = getMatrixAlternativesForFactors(problemUser, factor, alternativesList);
+				AHP ahpDataAlternatives = runAHPeig(matrix);
+				for (int i = 0; i < alternativesList.size(); i++) {
+					alternativesFactorAnswerAHPList.add(new AlternativesFactorAnswerAhp(
+							new Factor(factor.getId()), new Alternatives(alternativesList.get(i).getId()),
+							(float) ahpDataAlternatives.getWeights()[i]));
+				}
+				alternativesFactorCrAHPList.add(new AlternativesFactorCrAhp(new Factor(factor.getId()),
+						(float) ahpDataAlternatives.getCr()));
+			}
+		}
+		problemUserAhp.setAlternativesFactorCrAhp(alternativesFactorCrAHPList);
+		problemUserAhp.setAlternativesFactorAnswerAhp(alternativesFactorAnswerAHPList);
+		problemsUserAHPRepository.save(problemUserAhp);
+	}
+
+	/**
+	 * Run tha AHP algorithm and save the results for the alternatives of criteria
+	 */
+	private void alternativesForCriteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp, List<Criteria> criteriaList) {
+		List<AlternativesCriteriaAnswerAhp> alternativesCriteriaAnswerAHPList = new ArrayList<>();
+		List<AlternativesCriteriaCrAhp> alternativesCriteriaCrAHPList = new ArrayList<>();
+		for (Criteria criteria : criteriaList) {
+			if (criteria.getFactor().size() == 0) {
+				System.out.println("--------------------------------- Run Alternatives for Criteria: "
+						+ criteria.getName() + "  -----------------------------------");
+				List<Alternatives> alternativesList = problemUser.getProblem().getAlternatives();
+				if (alternativesList.size() > 0) {
+					double[][] matrix = getMatrixAlternativesForCriteria(problemUser, criteria, alternativesList);
+					AHP ahpDataAlternatives = runAHPeig(matrix);
+					for (int i = 0; i < alternativesList.size(); i++) {
+						alternativesCriteriaAnswerAHPList
+								.add(new AlternativesCriteriaAnswerAhp(new Criteria(criteria.getId()),
+										new Alternatives(alternativesList.get(i).getId()),
+										(float) ahpDataAlternatives.getWeights()[i]));
+					}
+					alternativesCriteriaCrAHPList.add(new AlternativesCriteriaCrAhp(
+							new Criteria(criteria.getId()), (float) ahpDataAlternatives.getCr()));
+				}
+			}
+		}
+		problemUserAhp.setAlternativesCriteriaCrAhp(alternativesCriteriaCrAHPList);
+		problemUserAhp.setAlternativesCriteriaAnswerAhp(alternativesCriteriaAnswerAHPList);
+		System.out.println("--------------------------------- Complete Criteria Alternatives  -----------------------------------");
+	}
+
+	/**
+	 * Run tha AHP algorithm and save the results for the factors of criteria
+	 */
+	private void factorsForCriteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp, List<Criteria> criteriaList) {
+		List<FactorAnswerAhp> factorAnswerAHPList = new ArrayList<>();
+		List<FactorCrAhp> factorCrAhpList = new ArrayList<>();
+		for (Criteria criteria : criteriaList) {
+			if (criteria.getFactor().size() > 1) {
+				System.out.println("--------------------------------- Run Facto for Criteria: " + criteria.getName() + "  -----------------------------------");
+				List<Factor> factorList = criteria.getFactor();
+				double[][] matrix = getMatrixFactorForCriteria(problemUser, criteria, factorList);
+				AHP ahpDataFactor = runAHPeig(matrix);
+				for (int i = 0; i < factorList.size(); i++) {
+					factorAnswerAHPList.add(new FactorAnswerAhp(new Criteria(criteria.getId()),
+							new Factor(factorList.get(i).getId()), (float) ahpDataFactor.getWeights()[i]));
+				}
+				factorCrAhpList
+						.add(new FactorCrAhp(new Criteria(criteria.getId()), (float) ahpDataFactor.getCr()));
+			}
+		}
+		problemUserAhp.setFactorCrAhp(factorCrAhpList);
+		problemUserAhp.setFactorAnswerAhp(factorAnswerAHPList);
+		System.out.println( "--------------------------------- Complete Factor  -----------------------------------");
+	}
+
+	/**
+	 * Run tha AHP algorithm and save the results for the criteria
+	 */
+	private void criteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp, List<Criteria> criteriaList) {
+		System.out.println("--------------------------------- Run Criteria  -----------------------------------");
+		if (criteriaList.size() > 0) {
+			double[][] matrix = getMatrixCriteria(problemUser, criteriaList);
+			AHP ahpDataCriteria = runAHPeig(matrix);
+			List<CriteriaAnswerAhp> criteriaAnswerAHPList = new ArrayList<>();
+			for (int i = 0; i < criteriaList.size(); i++) {
+				criteriaAnswerAHPList.add(new CriteriaAnswerAhp(new Criteria(criteriaList.get(i).getId()),
+						(float) ahpDataCriteria.getWeights()[i]));
+			}
+			problemUserAhp.setCriteriaCrAhp(new CriteriaCrAhp((float) ahpDataCriteria.getCr()));
+			problemUserAhp.setCriteriaAnswerAhp(criteriaAnswerAHPList);
+		}
+		System.out.println( "--------------------------------- Complete Criteria  -----------------------------------");
+	}
+
+	/**
+	 * Generate the matrix which are necessary for tha AHP algorithm for the alternatives of factors
+	 *
+	 * @return the Matrix
+	 */
+	private double[][] getMatrixAlternativesForFactors(ProblemUser problemUser, Factor factor, List<Alternatives> alternativesList) {
+		double[][] matrix = new double[alternativesList.size()][alternativesList.size()];
+		for (int i = 0; i < alternativesList.size(); i++) {
+			for (int j = 0; j < alternativesList.size(); j++) {
+				if (i != j) {
+					final int iFinal = i;
+					final int jFinal = j;
+					AlternativesFactorAnswer alternativesFactorAnswer = problemUser
+							.getAlternativesFactorAnswer().stream()
+							.filter(alternativesFactorTmp -> alternativesFactorTmp.getAlternativesTop()
+									.getId() == alternativesList.get(iFinal).getId()
+									&& alternativesFactorTmp.getAlternativesLeft()
+											.getId() == alternativesList.get(jFinal).getId()
+									&& alternativesFactorTmp.getFactor().getId() == factor.getId())
+							.findAny().orElse(null);
+					if (alternativesFactorAnswer != null)
+						matrix[i][j] = alternativesFactorAnswer.getWeight();
+					else
+						matrix[i][j] = 1;
+
+				} else
+					matrix[i][j] = 1;
+			}
+		}
+		return matrix;
+	}
+
+	/**
+	 * Generate the matrix which are necessary for tha AHP algorithm for the alternatives of criteria
+	 *
+	 * @return the Matrix
+	 */
+	private double[][] getMatrixAlternativesForCriteria(ProblemUser problemUser, Criteria criteria, List<Alternatives> alternativesList) {
+		double[][] matrix = new double[alternativesList.size()][alternativesList
+				.size()];
+		for (int i = 0; i < alternativesList.size(); i++) {
+			for (int j = 0; j < alternativesList.size(); j++) {
+				if (i != j) {
+					final int iFinal = i;
+					final int jFinal = j;
+					AlternativesCriteriaAnswer alternativesCriteriaAnswer = problemUser
+							.getAlternativesCriteriaAnswer().stream()
+							.filter(alternativesCriteriaTmp -> alternativesCriteriaTmp
+									.getAlternativesTop()
+									.getId() == alternativesList.get(iFinal).getId()
+									&& alternativesCriteriaTmp.getAlternativesLeft()
+											.getId() == alternativesList.get(jFinal).getId()
+									&& alternativesCriteriaTmp.getCriteria().getId() == criteria
+											.getId())
+							.findAny().orElse(null);
+					if (alternativesCriteriaAnswer != null)
+						matrix[i][j] = alternativesCriteriaAnswer.getWeight();
+					else
+						matrix[i][j] = 1;
+
+				} else
+					matrix[i][j] = 1;
+			}
+		}
+		return matrix;
+	}
+
+	/**
+	 * Generate the matrix which are necessary for tha AHP algorithm for the factors of criteria
+	 *
+	 * @return the Matrix
+	 */
+	private double[][] getMatrixFactorForCriteria(ProblemUser problemUser, Criteria criteria, List<Factor> factorList) {
+		double[][] matrix = new double[factorList.size()][factorList.size()];
+		for (int i = 0; i < factorList.size(); i++) {
+			for (int j = 0; j < factorList.size(); j++) {
+				if (i != j) {
+					final int iFinal = i;
+					final int jFinal = j;
+					FactorAnswer factorAnswer = problemUser.getFactorAnswer().stream()
+							.filter(factorAnswerTmp -> factorAnswerTmp.getFactorTop()
+									.getId() == factorList.get(iFinal).getId()
+									&& factorAnswerTmp.getFactorLeft().getId() == factorList.get(jFinal)
+											.getId()
+									&& factorAnswerTmp.getCriteria().getId() == criteria.getId())
+							.findAny().orElse(null);
+					if (factorAnswer != null)
+						matrix[i][j] = factorAnswer.getWeight();
+					else
+						matrix[i][j] = 1;
+				} else
+					matrix[i][j] = 1;
+			}
+		}
+		return matrix;
+	}
+
+	/**
+	 * Generate the matrix which are necessary for tha AHP algorithm for the criteria
+	 *
+	 * @return the Matrix
+	 */
+	private double[][] getMatrixCriteria(ProblemUser problemUser, List<Criteria> criteriaList) {
+		double[][] matrix = new double[criteriaList.size()][criteriaList.size()];
+		for (int i = 0; i < criteriaList.size(); i++) {
+			for (int j = 0; j < criteriaList.size(); j++) {
+				if (i != j) {
+					final int iFinal = i;
+					final int jFinal = j;
+					CriteriaAnswer criteriaAnswer = problemUser.getCriteriaAnswer().stream()
+							.filter(criteriaAnswerTmp -> criteriaAnswerTmp.getCriteriaTop()
+									.getId() == criteriaList.get(iFinal).getId()
+									&& criteriaAnswerTmp.getCriteriaLeft().getId() == criteriaList
+											.get(jFinal).getId())
+							.findAny().orElse(null);
+					if (criteriaAnswer != null)
+						matrix[i][j] = criteriaAnswer.getWeight();
+					else
+						matrix[i][j] = 1;
+				} else
+					matrix[i][j] = 1;
+			}
+		}
+		return matrix;
+	}
+
 	/**
 	 * run the AHP algorithm
 	 *
@@ -250,52 +312,35 @@ public class RunAHP {
 
 		EigenvalueDecomposition e = matrixEig.eig();
 		double maxDiagonValue = 0.0;
-		int poisitionDiagonValue = 0;
+		int positionDiagonValue = 0;
 		for (int i = 0; i < e.getD().getRowDimension(); i++) {
 			if (Math.abs(e.getD().get(i, i)) > maxDiagonValue) {
 				maxDiagonValue = Math.abs(e.getD().get(i, i));
-				poisitionDiagonValue = i;
+				positionDiagonValue = i;
 			}
 		}
-		System.out.println("maxDiagonValue: " + maxDiagonValue + " | poisitionDiagonValue: " + poisitionDiagonValue);
+		System.out.println("maxDiagonValue: " + maxDiagonValue + " | positionDiagonValue: " + positionDiagonValue);
 		double sumRightVector = 0.0;
 		for (int i = 0; i < e.getV().getRowDimension(); i++) {
-			sumRightVector += Math.abs(e.getV().get(i, poisitionDiagonValue));
+			sumRightVector += Math.abs(e.getV().get(i, positionDiagonValue));
 		}
 		System.out.println("sumRightVector: " + sumRightVector);
 		double[] weight = new double[e.getV().getRowDimension()];
 		for (int i = 0; i < e.getV().getRowDimension(); i++) {
-			weight[i] = Math.abs(e.getV().get(i, poisitionDiagonValue)) / sumRightVector;
+			weight[i] = Math.abs(e.getV().get(i, positionDiagonValue)) / sumRightVector;
 			System.out.println(
-					Math.abs(e.getV().get(i, poisitionDiagonValue)) + " / " + sumRightVector + " = " + weight[i]);
+					Math.abs(e.getV().get(i, positionDiagonValue)) + " / " + sumRightVector + " = " + weight[i]);
 		}
 		 
 		double ci = (maxDiagonValue - e.getV().getRowDimension()) / (e.getV().getRowDimension() - 1);
 		System.out.println("CI= " + ci);
-		double ri = 0;
-		if (e.getV().getRowDimension() == 1 || e.getV().getRowDimension() == 2) {
-			ri = 0;
-		} else if (e.getV().getRowDimension() == 3) {
-			ri = 0.52;
-		} else if (e.getV().getRowDimension() == 4) {
-			ri = 0.89;
-		} else if (e.getV().getRowDimension() == 5) {
-			ri = 1.11;
-		} else if (e.getV().getRowDimension() == 6) {
-			ri = 1.25;
-		} else if (e.getV().getRowDimension() == 7) {
-			ri = 1.35;
-		} else if (e.getV().getRowDimension() == 8) {
-			ri = 1.4;
-		} else if (e.getV().getRowDimension() == 9) {
-			ri = 1.45;
-		} else if (e.getV().getRowDimension() == 10) {
-			ri = 1.49;
-		}
+		double ri = Util.getRi(e);
 		double cr = ri == 0 ? 0 : ci / ri;
 		DecimalFormat df = new DecimalFormat("###.###");
 		System.out.println("CR= " + df.format(cr));
 
 		return new AHP(weight, cr);
 	}
+
+
 }

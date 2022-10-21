@@ -25,6 +25,10 @@ import com.hua.model.ProblemUserAhp;
 import com.hua.repository.ProblemsUserAhpRepository;
 
 public class GenerateAhpExcel {
+
+	/**
+	 * Make the Excel file and start to insert the results of the AHP algorithm
+	 */
 	public ResponseEntity<InputStreamResource> makeExcel(int id, ProblemsUserAhpRepository problemsUserAhpRepository,
 														 GenerateAhpResultsExcel generateAhpResultsExcel){
 		Optional<List<ProblemUserAhp>> problemUserAhpListOpt = problemsUserAhpRepository.findAllByProblemUserProblemId(id);
@@ -40,12 +44,12 @@ public class GenerateAhpExcel {
 						  .findFirst()
 						  .orElse(null);
 				
-				if ( generateAhpExcel!=null && generateAhpExcel.getStatus()==true ) {
+				if ( generateAhpExcel!=null && generateAhpExcel.getStatus()) {
 					Sheet sheet = workbook.createSheet(problemUserAhp.getProblemUser().getUser().getUsername());
-					makeExceelPerUser(problemUserAhp, sheet);
+					makeExcelPerUser(problemUserAhp, sheet);
 				}
 			}
-			makeExceelSum(workbook, problemUserAhpList, generateAhpResultsExcel);
+			makeExcelSum(workbook, problemUserAhpList, generateAhpResultsExcel);
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try {
@@ -66,17 +70,21 @@ public class GenerateAhpExcel {
 		return null;
 		
 	}
-	public void makeExceelSum(Workbook workbook, List<ProblemUserAhp> problemUserAhpList, GenerateAhpResultsExcel generateAhpResultsExcell) {
+
+	/**
+	 * Generate the tab with the average of all user data
+	 */
+	public void makeExcelSum(Workbook workbook, List<ProblemUserAhp> problemUserAhpList, GenerateAhpResultsExcel generateAhpResultsExcel) {
 		Sheet sheet = workbook.getSheet("Persons");
 		int countOfSheets=problemUserAhpList.size();
 		
 		Sheet sheetUser = null;
 		for ( ProblemUserAhp problemUserAhp : problemUserAhpList ) {
-			GenerateAhpResultsExcelWithSelection generateAhpExcel = generateAhpResultsExcell.getGenerateAhpResultsExcelWithSelection().stream()
+			GenerateAhpResultsExcelWithSelection generateAhpExcel = generateAhpResultsExcel.getGenerateAhpResultsExcelWithSelection().stream()
 					  .filter(generateAhpResultsExcelWithSelectionTmp -> generateAhpResultsExcelWithSelectionTmp.getUser().getUsername().equals(problemUserAhp.getProblemUser().getUser().getUsername()))
 					  .findFirst()
 					  .orElse(null);
-			if ( generateAhpExcel!=null && generateAhpExcel.getStatus()==true ) {
+			if ( generateAhpExcel!=null && generateAhpExcel.getStatus()) {
 				sheetUser = workbook.getSheet(problemUserAhp.getProblemUser().getUser().getUsername());
 				break;
 			}
@@ -86,7 +94,7 @@ public class GenerateAhpExcel {
 		int rowCounter=100, cellCounter=20;
 		for(int i=0; i<rowCounter; i++) {
 			for(int j=0; j<cellCounter; j++) {
-				Row headerUser = sheetUser.getRow(i);
+				Row headerUser = sheetUser != null ? sheetUser.getRow(i) : null;
 				if ( headerUser!=null ) {
 					Cell headerCellUser = headerUser.getCell(j);
 					if ( headerCellUser!=null ) {
@@ -96,18 +104,18 @@ public class GenerateAhpExcel {
 							headerCell.setCellValue(headerCellUser.getStringCellValue());
 						}
 						if ( headerCellUser.getCellType().toString().equals("NUMERIC") ) {
-							String formula = "(";
+							StringBuilder formula = new StringBuilder("(");
 							for ( ProblemUserAhp problemUserAhp : problemUserAhpList ) {
-								GenerateAhpResultsExcelWithSelection generateAhpExcell = generateAhpResultsExcell.getGenerateAhpResultsExcelWithSelection().stream()
-										  .filter(generateAhpResultsExcellWithSelectionTmp -> generateAhpResultsExcellWithSelectionTmp.getUser().getUsername().equals(problemUserAhp.getProblemUser().getUser().getUsername()))
+								GenerateAhpResultsExcelWithSelection generateAhpExcel = generateAhpResultsExcel.getGenerateAhpResultsExcelWithSelection().stream()
+										  .filter(generateAhpResultsExcelWithSelectionTmp -> generateAhpResultsExcelWithSelectionTmp.getUser().getUsername().equals(problemUserAhp.getProblemUser().getUser().getUsername()))
 										  .findFirst()
 										  .orElse(null);
-								if ( generateAhpExcell!=null && generateAhpExcell.getStatus()==true ) {
-									formula +="+"+problemUserAhp.getProblemUser().getUser().getUsername()+"!"+headerCellUser.getAddress();
+								if ( generateAhpExcel!=null && generateAhpExcel.getStatus()) {
+									formula.append("+").append(problemUserAhp.getProblemUser().getUser().getUsername()).append("!").append(headerCellUser.getAddress());
 								}
 							}
-							formula +=")/"+countOfSheets;
-							headerCell.setCellFormula(formula);
+							formula.append(")/").append(countOfSheets);
+							headerCell.setCellFormula(formula.toString());
 //							System.out.println(headerCellUser.toString() +" - "+ headerCellUser.getCellType() +" - "+headerCellUser.getAddress() );
 						}
 					}
@@ -116,15 +124,23 @@ public class GenerateAhpExcel {
 		}
 		
 	}
-	public void makeExceelPerUser(ProblemUserAhp problemUserAhp, Sheet sheet) {
-		makeExceelPerUserAlternativesRanking(problemUserAhp, sheet);
-		makeExceelPerUserWeightsCriteria(problemUserAhp, sheet);
-		makeExceelPerUserWeightsFactor(problemUserAhp, sheet);
+
+	/**
+	 * Insert the answers of users for each category of data
+	 */
+	private void makeExcelPerUser(ProblemUserAhp problemUserAhp, Sheet sheet) {
+		makeExcelPerUserAlternativesRanking(problemUserAhp, sheet);
+		makeExcelPerUserWeightsCriteria(problemUserAhp, sheet);
+		makeExcelPerUserWeightsFactor(problemUserAhp, sheet);
 		makeExcelPerUserWeightsCriteriaAlternatives(problemUserAhp, sheet);
-		makeExceelPerUserWeightsFactorAlternatives(problemUserAhp, sheet);
+		makeExcelPerUserWeightsFactorAlternatives(problemUserAhp, sheet);
 
 	}
-	public void makeExceelPerUserAlternativesRanking(ProblemUserAhp problemUserAhp, Sheet sheet) {
+
+	/**
+	 * Insert the results of users for the alternative ranking
+	 */
+	private void makeExcelPerUserAlternativesRanking(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		
 		int rowCounter=0, cellCounter=0;
 		sheet.addMergedRegion(new CellRangeAddress(rowCounter, rowCounter, cellCounter, cellCounter+1));
@@ -168,7 +184,11 @@ public class GenerateAhpExcel {
 			headerCell.setCellValue(sum);
 		}
 	}
-	public void makeExceelPerUserWeightsCriteria(ProblemUserAhp problemUserAhp, Sheet sheet) {
+
+	/**
+	 * Insert the results of users for criteria
+	 */
+	private void makeExcelPerUserWeightsCriteria(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
 		int rowCounter=0, cellCounter=4;
 		sheet.addMergedRegion(new CellRangeAddress(rowCounter, rowCounter, cellCounter, cellCounter + 1));
@@ -193,7 +213,11 @@ public class GenerateAhpExcel {
 			headerCell.setCellValue(criteriaAnswerAhp.getWeight());
 		}
 	}
-	public void makeExceelPerUserWeightsFactor(ProblemUserAhp problemUserAhp, Sheet sheet) {
+
+	/**
+	 * Insert the results of users for factors
+	 */
+	private void makeExcelPerUserWeightsFactor(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
 		int rowCounter=0, cellCounter=8;
 		sheet.addMergedRegion(new CellRangeAddress(rowCounter, rowCounter, cellCounter, cellCounter + 1));
@@ -222,7 +246,11 @@ public class GenerateAhpExcel {
 			headerCell.setCellValue(factorAnswerAhp.getWeight());
 		}
 	}
-	public void makeExcelPerUserWeightsCriteriaAlternatives(ProblemUserAhp problemUserAhp, Sheet sheet) {
+
+	/**
+	 * Insert the results of users for criteria alternatives
+	 */
+	private void makeExcelPerUserWeightsCriteriaAlternatives(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
 		int rowCounter=0, cellCounter=12;
 		sheet.addMergedRegion(new CellRangeAddress(rowCounter, rowCounter, cellCounter, cellCounter + 1));
@@ -251,7 +279,11 @@ public class GenerateAhpExcel {
 			headerCell.setCellValue(alternativesCriteriaAnswerAhp.getWeight());
 		}
 	}
-	public void makeExceelPerUserWeightsFactorAlternatives(ProblemUserAhp problemUserAhp, Sheet sheet) {
+
+	/**
+	 * Insert the results of users for factor alternatives
+	 */
+	private void makeExcelPerUserWeightsFactorAlternatives(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
 		int rowCounter=0, cellCounter=16;
 		sheet.addMergedRegion(new CellRangeAddress(rowCounter, rowCounter, cellCounter, cellCounter + 1));

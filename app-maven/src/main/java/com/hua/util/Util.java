@@ -1,5 +1,7 @@
 package com.hua.util;
 
+import Jama.EigenvalueDecomposition;
+
 public class Util {
 	/**
 	 * change the weight fo the answer the AHP mechanism
@@ -29,5 +31,34 @@ public class Util {
 		} else
 			weightTmp = 1/weight;
 		return weightTmp;
+	}
+
+	/**
+	 * get the ri from the eigenvalue decomposition
+	 *
+	 * @param e the eigenvalue decomposition
+	 */
+	public static double getRi(EigenvalueDecomposition e) {
+		double ri = 0;
+		if (e.getV().getRowDimension() == 1 || e.getV().getRowDimension() == 2) {
+			ri = 0;
+		} else if (e.getV().getRowDimension() == 3) {
+			ri = 0.52;
+		} else if (e.getV().getRowDimension() == 4) {
+			ri = 0.89;
+		} else if (e.getV().getRowDimension() == 5) {
+			ri = 1.11;
+		} else if (e.getV().getRowDimension() == 6) {
+			ri = 1.25;
+		} else if (e.getV().getRowDimension() == 7) {
+			ri = 1.35;
+		} else if (e.getV().getRowDimension() == 8) {
+			ri = 1.4;
+		} else if (e.getV().getRowDimension() == 9) {
+			ri = 1.45;
+		} else if (e.getV().getRowDimension() == 10) {
+			ri = 1.49;
+		}
+		return ri;
 	}
 }
