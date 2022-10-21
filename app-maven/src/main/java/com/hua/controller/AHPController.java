@@ -82,6 +82,29 @@ public class AHPController {
 		model.addAttribute("problemsUserAhpId", id);
 		return "problems/downloadPreview.html";
 	}
+
+	/**
+	 * Endpoint to early complete a research
+	 *
+	 * @param model Interface to set up information for the page
+	 * @param principal Information for the login user
+	 * @param id the id of the research
+	 *
+	 * @return to research page
+	 */
+	@GetMapping("complete/{id}")
+	public String complete(Model model, Principal principal, @PathVariable int id) {
+		Optional<Problem> problem = problemsRepository.findById(id);
+		if (problem.isPresent())
+			problem.get().setStatus(3);
+
+		model.addAttribute("problems", problemsRepository.findAllByUserUsername(principal.getName()).isPresent() ?
+				problemsRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>() );
+		model.addAttribute("usersGroup", userGroupRepository.findAllByUserUsername(principal.getName()).isPresent() ?
+				userGroupRepository.findAllByUserUsername(principal.getName()).get() : new ArrayList<>());
+		return "problems/problems.html";
+	}
+
 	/**
 	 * At the endpoint you could download the AHP
 	 *

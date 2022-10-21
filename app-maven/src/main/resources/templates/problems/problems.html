@@ -56,7 +56,7 @@
 												</div>
 												<div>
 											        <label for="date">Date</label>
-											        <input id="date" name="expireDate" type="date" required="required" />
+											        <input id="date" class="form-control" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" name="expireDate" type="date" required="required" />
 											    </div>
 											</div>
 											<div class="modal-footer">
@@ -68,7 +68,11 @@
 								</div>
 							</div>
 						</td>
-						<td th:if="${problem.status==2}">Running</td>
+						<td th:if="${problem.status==2}">
+							<a th:href="@{/runAHP/complete/} + ${problem.id}" class="btn btn-warning btn-sm">
+								Complete Survey
+							</a>
+						</td>
 						<td th:if="${problem.status==3}">
 							<a th:href="@{/runAHP/} + ${problem.id}" class="btn btn-success btn-sm">
 							  	<i class="fas fa-run"></i> Generate Data

@@ -48,9 +48,9 @@ public class DatabaseLoader implements CommandLineRunner {
 		
 		if (menuRepository.findAll().size() == 0) {
 			menuRepository.save(new Menu(1, "Home", "main", 1, 0, "ROLE_ADMIN"));
-			menuRepository.save(new Menu(2, "Research Management", "problems", 2, 0, "ROLE_ADMIN"));
-			menuRepository.save(new Menu(3, "Researches", "problems/manage", 1, 2, "ROLE_ADMIN"));
-			menuRepository.save(new Menu(4, "Research Wizard", "problems/wizard", 2, 2, "ROLE_ADMIN"));
+			menuRepository.save(new Menu(2, "Survey Management", "problems", 2, 0, "ROLE_ADMIN"));
+			menuRepository.save(new Menu(3, "Surveys", "problems/manage", 1, 2, "ROLE_ADMIN"));
+			menuRepository.save(new Menu(4, "Survey Wizard", "problems/wizard", 2, 2, "ROLE_ADMIN"));
 			menuRepository.save(new Menu(5, "User Management", "users", 3, 0, "ROLE_ADMIN"));
 			menuRepository.save(new Menu(6, "Users", "users", 1, 5, "ROLE_ADMIN"));
 			menuRepository.save(new Menu(7, "Group of User", "users/group", 2, 5, "ROLE_ADMIN"));

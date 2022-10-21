@@ -58,7 +58,7 @@
 											<div class="modal-body">
 												<div class="form-group">
 													<label for="exampleInputGroupName">Group Name</label> 
-													<input type="text" class="form-control" id="exampleInputGroupName" aria-describedby="groupNameHelp" placeholder="Enter group name" th:name="name" th:value="${userGroup.name}">
+													<input type="text" class="form-control" id="exampleInputGroupName" aria-describedby="groupNameHelp" placeholder="Enter group name" th:name="name" th:value="${userGroup.name}" th:maxlength="30" th:minlength="4" th:required="true">
 												</div>
 												<div class="form-group">
 													<label for="exampleInputDesciption">Description</label>
@@ -68,7 +68,7 @@
 												<div class="form-group">
 													<label for="exampleFormControlSelect2">Selected users</label><br> 
 													<select multiple class="selectpicker form-control" name="usersSelect" data-live-search="true"
-														id="exampleFormControlSelect2">
+														id="exampleFormControlSelect2" th:required="true">
 														<option th:each="user : ${users}" th:value="${user.id}"
 															th:selected="${userGroup.users.contains(user)}"
 															th:text="${user.username}"></option>
@@ -116,7 +116,7 @@
 						<div class="form-group">
 							<label for="inputName">Name</label> <input type="text"
 								class="form-control" id="inputName" aria-describedby="nameHelp"
-								placeholder="Enter user group name" th:name="name"> <small
+								placeholder="Enter user group name" th:name="name" th:maxlength="30" th:minlength="4" th:required="true"> <small
 								id="nameHelp" class="form-text text-muted">We'll never
 								share your email with anyone else.</small>
 						</div>
@@ -128,7 +128,7 @@
 						<div class="form-group">
 							<select multiple class="selectpicker form-control" name="usersSelect"
 								data-live-search="true"
-								id="exampleFormControlSelect2">
+								id="exampleFormControlSelect2" th:required="true">
 								<option th:each="user : ${users}" th:value="${user.id}"
 									th:text="${user.username}"></option>
 							</select>

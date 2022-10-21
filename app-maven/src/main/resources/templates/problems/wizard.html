@@ -19,8 +19,9 @@
 					<div class="col-md-6 col-sm-6 col-12">
 						<div class="border rounded p-2">
 							<div class="form-group">
-								<label for="researchName">Research Name</label> 
-								<input type="text" class="form-control" id="researchName" aria-describedby="researchNameHelp" placeholder="Research Name" th:name="name" th:value="${problem.name!=null ? problem.name:''}">
+								<label for="researchName">Survey Name</label>
+								<input type="text" class="form-control" id="researchName" aria-describedby="researchNameHelp" placeholder="Research Name" th:name="name" th:value="${problem.name!=null ? problem.name:''}"
+									   th:maxlength="30" th:minlength="4" th:required="true" >
 								<input type="text" th:if="${id!=0}" th:name="id" th:value="${problem.id!=0 ? problem.id:0}" class="d-none">
 								<small id="researchNameHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
 							</div>
@@ -36,7 +37,7 @@
 							<button type="button" class="btn btn-outline-success btn-sm" th:attr="onclick=${'newAlternative()'}"><i class="fa fa-plus" aria-hidden="true"></i> Alternative</button>
 							<div class="form-group" th:each="alternatives, rowStat : ${problem.alternatives}">
 								<label class="small" th:attr="for=${'alternatives'+__${rowStat.index}__}" th:text="${'Alternative '+__${rowStat.index + 1}__}"></label> 
-								<input type="text" class="form-control" th:id="${'alternatives'+__${rowStat.index}__}" placeholder="Alternative Name" th:name="${'alternatives['+__${rowStat.index}__+'].name'}" th:value="${alternatives.name}">
+								<input type="text" class="form-control" th:id="${'alternatives'+__${rowStat.index}__}" placeholder="Alternative Name" th:name="${'alternatives['+__${rowStat.index}__+'].name'}" th:value="${alternatives.name}" th:maxlength="30" th:minlength="4" th:required="true">
 								<input type="text" th:if="${alternatives.id!=0}" th:name="${'alternatives['+__${rowStat.index}__+'].id'}" th:value="${alternatives.id}" class="d-none">
 							</div>
 						</div>
@@ -53,14 +54,14 @@
 					<div class="criteria form-group col-lg-2 col-md-4 col-sm-6 col-12" th:each="criteria, rowStat : ${problem.criteria}">
 						<div class="border rounded p-2">
 							<label class="font-weight-bold" th:attr="for=${'criteria'+__${rowStat.index}__}" th:text="${'Criteria '+__${rowStat.index + 1}__}"></label>
-							<input type="text" class="form-control" th:id="${'criteria'+__${rowStat.index}__}" placeholder="Criteria Name" th:name="${'criteria['+__${rowStat.index}__+'].name'}" th:value="${criteria.name}">
+							<input type="text" class="form-control" th:id="${'criteria'+__${rowStat.index}__}" placeholder="Criteria Name" th:name="${'criteria['+__${rowStat.index}__+'].name'}" th:value="${criteria.name}" th:maxlength="30" th:minlength="4" th:required="true">
 							<input type="text" th:if="${criteria.id!=0}" th:name="${'criteria['+__${rowStat.index}__+'].id'}" th:value="${criteria.id}"  class="d-none"><hr>
 							<button type="button" class="btn btn-outline-success btn-sm" th:attr="onclick=${'newFactor('+__${rowStat.index}__+')'}"><i class="fa fa-plus" aria-hidden="true"></i> Factor</button>
 							<button type="button" class="btn btn-outline-danger float-right btn-sm" th:attr="onclick=${'removeFactor('+__${rowStat.index}__+')'}"><i class="fa fa-minus" aria-hidden="true"></i> Factor</button>
 							<div th:id="${'factor'+__${rowStat.index}__}">
 								<div class="form-group" th:each="factor, rowStatFactor : ${criteria.factor}">
 									<label class="small" th:attr="for=${'criteria'+__${rowStat.index}__+'factor'+__${rowStatFactor.index}__}" th:text="${'Factor '+__${rowStatFactor.index + 1}__}"></label>
-									<input type="text" class="form-control" th:id="${'criteria'+__${rowStat.index}__+'factor'+__${rowStatFactor.index}__}" placeholder="Factor Name" th:name="${'criteria['+__${rowStat.index}__+'].factor['+__${rowStatFactor.index}__+'].name'}" th:value="${factor.name}" >
+									<input type="text" class="form-control" th:id="${'criteria'+__${rowStat.index}__+'factor'+__${rowStatFactor.index}__}" placeholder="Factor Name" th:name="${'criteria['+__${rowStat.index}__+'].factor['+__${rowStatFactor.index}__+'].name'}" th:value="${factor.name}" th:maxlength="30" th:minlength="4" th:required="true">
 									<input type="text" th:if="${factor.id!=0}" th:name="${'criteria['+__${rowStat.index}__+'].factor['+__${rowStatFactor.index}__+'].id'}" th:value="${factor.id}"  class="d-none">
 								</div>
 							</div>
@@ -80,7 +81,7 @@
 				"<div class='criteria form-group col-lg-2 col-md-4 col-sm-6 col-12'>"+
 					"<div class='border rounded p-2'>"+
 						"<label for='criteria"+counter+"'><dt>Criteria "+(counter+1)+"</dt></label> "+
-						"<input type='text' class='form-control' id='criteria"+counter+"' placeholder='Criteria Name' name='criteria["+counter+"].name'> <hr>"+
+						"<input type='text' class='form-control' id='criteria"+counter+"' placeholder='Criteria Name' name='criteria["+counter+"].name' maxlength='30' minlength='4' required='true'> <hr>"+
 						"<button type='button' class='btn btn-outline-success btn-sm' onclick='newFactor("+counter+")'><i class='fa fa-plus' aria-hidden='true'></i> Factor</button>"+
 						"<button type='button' class='btn btn-outline-danger float-right btn-sm' onclick='removeFactor("+counter+")'><i class='fa fa-minus' aria-hidden='true'></i> Factor</button>"+
 						"<div id='factor"+counter+"'></div>"+
@@ -92,7 +93,7 @@
 			$( "#factor"+criteriaIndex ).append( 
 				"<div class='form-group'>"+
 					"<label for='criteria"+criteriaIndex+"factor"+counter+"' class='small'>Factor "+(counter+1)+"</label> "+
-					"<input type='text' class='form-control' id='criteria"+criteriaIndex+"factor"+counter+"' placeholder='Factor Name' name='criteria["+criteriaIndex+"].factor["+counter+"].name'> "+
+					"<input type='text' class='form-control' id='criteria"+criteriaIndex+"factor"+counter+"' placeholder='Factor Name' name='criteria["+criteriaIndex+"].factor["+counter+"].name' maxlength='30' minlength='4' required='true'> "+
 				"</div>" );
 		}
 		function newAlternative() {
@@ -100,7 +101,7 @@
 			$( "#alternative" ).append( 
 				"<div class='form-group'>"+
 					"<label class='small' for='alternatives"+counter+"'>Alternative "+(counter+1)+"</label> "+
-					"<input type='text' class='form-control' id='alternatives"+counter+"' placeholder='Alternative Name' name='alternatives["+counter+"].name'> "+
+					"<input type='text' class='form-control' id='alternatives"+counter+"' placeholder='Alternative Name' name='alternatives["+counter+"].name' maxlength='30' minlength='4' required='true'> "+
 				"</div>" );
 		}
 		function removeCriteria() {

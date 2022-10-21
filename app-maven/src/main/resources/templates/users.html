@@ -55,17 +55,17 @@
 											<div class="modal-body">
 												<div class="form-group">
 													<label for="exampleInputEmail1">Email address</label> 
-													<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:name="email" th:value="${user.email}">
+													<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" th:name="email" th:value="${user.email}" th:maxlength="30" th:minlength="4" th:required="true">
 													<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
 												</div>
 												<div class="form-group">
 													<label for="exampleInputRealName">Real Name</label> 
-													<input type="text" class="form-control" id="exampleInputRealName" aria-describedby="realNameHelp" placeholder="Enter real name" th:name="realName" th:value="${user.realName}">
+													<input type="text" class="form-control" id="exampleInputRealName" aria-describedby="realNameHelp" placeholder="Enter real name" th:name="realName" th:value="${user.realName}" th:maxlength="30" th:minlength="4" th:required="true">
 												</div>
 												<div class="form-group" sec:authorize="hasRole('ROLE_ADMIN')">
 													<label for="exampleFormControlSelect2">User Authority</label><br>
 													<select class="selectpicker form-control" name="authorities.authority" data-live-search="true"
-														id="exampleFormControlSelect2">
+														id="exampleFormControlSelect2" th:required="true">
 														<option th:value="ROLE_USER"
 															th:selected="${user.authorities.authority.contains('USER')}"
 															th:text="User"></option>
