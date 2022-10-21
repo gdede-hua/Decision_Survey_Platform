@@ -76,7 +76,6 @@ public class AHPController {
 	 */
 	@GetMapping("downloadPreview/{id}")
 	public String getManage(Model model, @PathVariable int id) {
-
 		model.addAttribute("problemsUserAhp", problemsUserAHPRepository.findAllByProblemUserProblemId(id).isPresent() ?
 				problemsUserAHPRepository.findAllByProblemUserProblemId(id).get() : new ArrayList<>());
 		model.addAttribute("problemsUserAhpId", id);

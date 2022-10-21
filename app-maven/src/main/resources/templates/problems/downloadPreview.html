@@ -19,14 +19,15 @@
 				<div class="col">
 					<h1 th:inline="text">Download Preview</h1>
 				</div>
-				<div class="col">
+				<div class="col" th:if="${#lists.size(problemsUserAhp)} > 0">
 					<a th:href="@{/runAHP/excel/data/}+ ${problemsUserAhpId}"
 						class="btn btn-success btn-md float-right" download> <i
 						class="fas fa-download"></i> Download data
 					</a>
 				</div>
 			</div>
-			<form method="POST" th:action="@{/runAHP/excel}" download>
+			<p th:if="${#lists.size(problemsUserAhp)} == 0">System doesn't have data.</p>
+			<form method="POST" th:action="@{/runAHP/excel}" th:if="${#lists.size(problemsUserAhp)} > 0" download>
 				<input name="id" class="d-none" type="text" th:value="${problemsUserAhpId}" >
 											
 				<div class="accordion" id="accordion" th:each="problemsUserAHP, rowPualStat : ${problemsUserAhp}">
@@ -88,7 +89,6 @@
 					</div>
 				</div>
 			</form>
-			
 		</div>
 	</div>
 
