@@ -31,7 +31,7 @@ docker-compose up
 ```
 
 ### Docker Ports
-The application port is 8080.
+The application port is 8080. The link of the application is http://localhost:8080.
 The MySQL port is 3306.
 
 In case one would like to edit the above ports he/she may edit the .env file.
@@ -57,21 +57,21 @@ The site is separated by user accounts and administrator accounts.
 
 The administrator can:
 
-* Create, modify and delete researches
-* Assign users to answer a research
-* Extract research results based on the user answers
+* Create, modify and delete surveys
+* Assign users to answer a survey
+* Extract survey results based on the user answers
 
 On the other hand a user can:
-* Answer an assigned research
+* Answer an assigned survey
 
 ### Administrator
 The administrator can find all the possible actions in a sidebar in his main screen.
 
 ![Admin Main](blob/mainPage.png)
 
-#### Creating a research
-The administrator will have to complete a form for the creation of a research.
->Note: The administrator can edit the research before publishing to users, by visiting the `Research` link in the sidebar
+#### Creating a survey
+The administrator will have to complete a form for the creation of a survey.
+>Note: The administrator can edit the survey before publishing to users, by visiting the `Survey` link in the sidebar
 
 ![Research wizard](blob/researchWizard.png)
 
