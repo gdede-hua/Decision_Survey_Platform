@@ -200,58 +200,5 @@ Example answers for an assigned survey and the form that the user may fill in, i
 ![Survey](blob/survey.png)
 ![Survey Run](blob/surveyAnswers.png)
 
-# Example
-This section provides an example of the tool usefulness for a real case scenario. 
-We consider the scenario of deciding which is the suitable technology to use in the vision of the all optical house. 
-According to the AHP alternative technological have to be identified and ranked based based on AHP.. 
-Towards this end, the administrator creates the survey defining the criteria, factors under each criterion and alternative technological scenarios. 
-More specifically, the above alternatives are considered:
-- T1. Infrared 
-- T2. Power Line Communications (PLC)
-- T3. Visible Light Communications (VLC)
-
-The criteria defined are presented below:
-- C1. Performance
-- C2. Economic Issues
-- C3. Social Acceptance
-
-The Factors under each criterion C1 are described below:
-- F11. Reach
-- F12. Coverage
-- F13. Downstream Throughput
-- F14. Upstream Throughput
-
-The Factors under each criterion C2 are listed below:
-- F21. Cost of Installation
-- F22. Cost of Equipment
-- F23. Installation Cost
-
-The Factors under each criterion C3 follow:
-- F31. Health Issues
-- F32. Home Integration with no new wires/Design
-- F33. Usability
-- F34. Compatibility with legacy systems
-
-In this context the administrator creates a survey with 15 PWC forms in order to be filled in by the experts/users. A PWC form is presented abobve in the Section User.
-In the context of PWC the user compares the involved elements in pairs of two answering each time to the question which element of the two is more important for the all optical house. More specifically:
-- PWC of the Criteria
-- PWC of the Factors under C1
-- PWC of the Factors under C2
-- PWC of the Factors under C3
-- PWC of alternative technologies under F11.
-- PWC of alternative technologies under F12.
-- PWC of alternative technologies under F13.
-- PWC of alternati ve technologies under F14.
-- PWC of alternative technologies under F21.
-- PWC of alternative technologies under F22.
-- PWC of alternative technologies under F23.
-- PWC of alternative technologies under F31.
-- PWC of alternative technologies under F32.
-- PWC of alternative technologies under F33.
-- PWC of alternative technologies under F34.
-
-Based on the above, 15 experts/users are called to fill in the corresponding PWC matrices in order to capture the importance of the criteria (which one is more important in pairs of two), the importance of the factors under each criterion (which one is more important factor for each criterion) as well as the performance of the technological alternatives under each factor (which technolohy has a higher performance for each factor). The experts fill in the PWC forms choosing values from a certain scale defined by the administrator based on the AHP.
-
-Once the experts have filled in the PWC researched then the administrator can press generate data in order the algorithm to estimate the weights of importance of criteria $w_{k}$ , factors $f_{jk}$ under each criterion and relative importance of alterantive technologies $S_{ijk}$ and the final priorities $T_{i}$ of the technologies as described in the AHP approach described above.
 
 # References
