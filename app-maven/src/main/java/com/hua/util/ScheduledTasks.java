@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 import com.hua.model.ProblemUserExpire;
 import com.hua.repository.ProblemUserExpireRepository;
 
+/**
+ * For each day the system check the active surveys expiration time and if they had expire make them
+ * inaccessible to simple users.
+ * @author      John Nikolaou
+ */
 @Component
 public class ScheduledTasks {
 
@@ -24,9 +29,9 @@ public class ScheduledTasks {
 	}
 
 	/**
-	 * check if a survey had expire
+	 * The system execute that function at 00:00:01 each day to make the surveys inaccessible.
 	 */
-	@Scheduled(cron="0 40 20 * * ?")//cron="1 0 0 * * ?"
+	@Scheduled(cron="1 0 0 * * ?")
 	public void reportCurrentTime() {
 		log.info("----- Execute Scheduler -----");
 		List<ProblemUserExpire> problemUserExpireList = problemUserExpireRepository.findAllByExpireDateLessThanAndProblemStatus(new Date(), 2);

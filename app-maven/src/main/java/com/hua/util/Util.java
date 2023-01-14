@@ -2,9 +2,13 @@ package com.hua.util;
 
 import Jama.EigenvalueDecomposition;
 
+/**
+ * Used to centralize some generic functions
+ * @author      John Nikolaou
+ */
 public class Util {
 	/**
-	 * change the weight fo the answer the AHP mechanism
+	 * Used to find the opposite value of each answer of the user
 	 *
 	 * @param weight the weight of the answer
 	 */
@@ -34,9 +38,10 @@ public class Util {
 	}
 
 	/**
-	 * get the ri from the eigenvalue decomposition
+	 * From the numbers of the row dimension we get the ri value
 	 *
 	 * @param e the eigenvalue decomposition
+	 * @return the ri value
 	 */
 	public static double getRi(EigenvalueDecomposition e) {
 		double ri = 0;

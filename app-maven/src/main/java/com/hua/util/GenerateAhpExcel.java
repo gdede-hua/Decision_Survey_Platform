@@ -24,10 +24,20 @@ import com.hua.model.GenerateAhpResultsExcelWithSelection;
 import com.hua.model.ProblemUserAhp;
 import com.hua.repository.ProblemsUserAhpRepository;
 
+/**
+ * In that class, the system generates an Excel with of AHP results
+ * @author      John Nikolaou
+ */
 public class GenerateAhpExcel {
 
 	/**
-	 * Make the Excel file and start to insert the results of the AHP algorithm
+	 * That function create an Excel file into memory and start the
+	 * process to insert the data of the results.
+	 *
+	 * @param id of the survey which we want to extract tha data
+	 * @param problemsUserAhpRepository
+	 * @param generateAhpResultsExcel
+	 * @return the Excel file
 	 */
 	public ResponseEntity<InputStreamResource> makeExcel(int id, ProblemsUserAhpRepository problemsUserAhpRepository,
 														 GenerateAhpResultsExcel generateAhpResultsExcel){
@@ -73,6 +83,10 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Generate the tab with the average of all user data
+	 *
+	 * @param workbook the Excel object
+	 * @param problemUserAhpList All the data produced from AHP algorithm
+	 * @param generateAhpResultsExcel The list of user we want to export data
 	 */
 	public void makeExcelSum(Workbook workbook, List<ProblemUserAhp> problemUserAhpList, GenerateAhpResultsExcel generateAhpResultsExcel) {
 		Sheet sheet = workbook.getSheet("Persons");
@@ -127,6 +141,9 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Insert the answers of users for each category of data
+	 *
+	 * @param problemUserAhp the data of a user produced from AHP algorithm
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUser(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		makeExcelPerUserAlternativesRanking(problemUserAhp, sheet);
@@ -139,6 +156,9 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Insert the results of users for the alternative ranking
+	 *
+	 * @param problemUserAhp the data of a user produced from AHP algorithm
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUserAlternativesRanking(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		
@@ -187,6 +207,9 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Insert the results of users for criteria
+	 *
+	 * @param problemUserAhp the data of a user produced from AHP algorithm
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUserWeightsCriteria(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
@@ -216,6 +239,8 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Insert the results of users for factors
+	 * @param problemUserAhp the data of a user produced from AHP algorithm
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUserWeightsFactor(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
@@ -249,6 +274,9 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Insert the results of users for criteria alternatives
+	 *
+	 * @param problemUserAhp the data of a user produced from AHP algorithm
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUserWeightsCriteriaAlternatives(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights
@@ -282,6 +310,9 @@ public class GenerateAhpExcel {
 
 	/**
 	 * Insert the results of users for factor alternatives
+	 *
+	 * @param problemUserAhp the data of a user produced from AHP algorithm
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUserWeightsFactorAlternatives(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		// Criteria Weights

@@ -4,22 +4,38 @@ import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.hua.model.Users;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import java.util.Base64;
 /**
- * AES encryption for the user information
+ * Service interface for symmetric encryption of the user information.
+ * @author      John Nikolaou
  */
 public class AesEncryptor implements TextEncryptor {
-	
+
+	/**
+	 * The ALGO it is the name of the encryption algorithm
+	 */
 	private static final String ALGO = "AES";
 
+	/**
+	 * The secret it is the secret used for the encryption of the data
+	 */
 	private String secret;
+
+	/**
+	 * Class constructor.
+	 * @param secret
+	 */
 	public AesEncryptor(String secret) {
 		this.secret = secret;
 	}
 
-
+	/**
+	 * Encrypt the raw text string.
+	 * @param data
+	 */
 	@Override
 	public String encrypt(String data) {
 		try {
@@ -33,7 +49,10 @@ public class AesEncryptor implements TextEncryptor {
 		}
 		return null;
 	}
-
+	/**
+	 * Decrypt the encrypted text string.
+	 * @param encryptedData
+	 */
 	@Override
 	public String decrypt(String encryptedData) {
 		try {

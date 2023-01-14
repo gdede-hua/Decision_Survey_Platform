@@ -26,6 +26,10 @@ import com.hua.repository.UsersRepository;
 import com.hua.util.JwtUtil;
 import com.hua.util.Mailer;
 
+/**
+ * Class for the management of the user(Add/Edit etc.)
+ * @author      John Nikolaou
+ */
 @Controller
 @RequestMapping("/users")
 public class UsersController {

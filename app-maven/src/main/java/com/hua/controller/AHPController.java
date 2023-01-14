@@ -26,6 +26,10 @@ import com.hua.util.GenerateAhpExcel;
 import com.hua.util.GenerateDataExcel;
 import com.hua.util.RunAHP;
 
+/**
+ * Class for the management of the action which used for the processing the data of the AHP algorithm.
+ * @author      John Nikolaou
+ */
 @Controller
 @RequestMapping("/runAHP")
 public class AHPController {

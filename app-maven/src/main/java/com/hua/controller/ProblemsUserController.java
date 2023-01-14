@@ -25,6 +25,10 @@ import com.hua.repository.ProblemsUserRepository;
 import com.hua.repository.UsersRepository;
 import com.hua.util.Util;
 
+/**
+ * Class for the management of the problems which had assign to a user.
+ * @author      John Nikolaou
+ */
 @Controller
 @RequestMapping("/problemsUser")
 public class ProblemsUserController {

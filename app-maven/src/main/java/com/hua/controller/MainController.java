@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.google.gson.Gson;
 import com.hua.repository.MenuRepository;
 
+/**
+ * Class for the management of UI main page.
+ * @author      John Nikolaou
+ */
 @Controller
 public class MainController {
 

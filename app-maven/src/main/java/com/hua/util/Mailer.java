@@ -15,7 +15,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 /**
- * send the emails for the reset password mechanism
+ * That function used for the interaction with the user.
+ * @author      John Nikolaou
  */
 public class Mailer {
 
@@ -91,13 +92,22 @@ public class Mailer {
 	public void setSmtpPort(String smtpPort) {
 		this.smtpPort = smtpPort;
 	}
-	
+
+	/**
+	 * that function used to set up a different configuration in case we have SSL
+	 * @param to the mail of a user
+	 */
 	public void SendEmail(String to) {
 		if (sslEnable)
 			SendEmailSSL(to);
 		else
 			SendEmailNoSSL(to);
 	}
+
+	/**
+	 * That function include the necessary configuration if we want to send an email using SSL
+	 * @param to the mail of a user
+	 */
 	private void SendEmailSSL(String to) {
 		
 		System.out.println("SSLEmail Start");
@@ -119,6 +129,10 @@ public class Mailer {
 		sendEmail(session, to);
 
 	}
+	/**
+	 * That function include the basic configuration necessary configuration
+	 * @param to the mail of a user
+	 */
 	private void SendEmailNoSSL(String to) {
 		
 		// Get system properties
@@ -135,6 +149,13 @@ public class Mailer {
 		sendEmail(session, to);
 		
 	}
+
+	/**
+	 * With that function we send the email to the users
+	 *
+	 * @param session the configuration to send an email
+	 * @param to the mail of a user
+	 */
 	public void sendEmail(Session session, String to) {
 		try {
 			// Create a default MimeMessage object.

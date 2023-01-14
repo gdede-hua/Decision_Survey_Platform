@@ -27,6 +27,10 @@ import com.hua.repository.UsersGroupRepository;
 import com.hua.repository.UsersRepository;
 import com.hua.util.Mailer;
 
+/**
+ * Class for the management of the problems.
+ * @author      John Nikolaou
+ */
 @Controller
 @RequestMapping("/problems")
 public class ProblemsController {

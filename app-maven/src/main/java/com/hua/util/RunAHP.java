@@ -31,7 +31,12 @@ import com.hua.repository.ProblemsUserRepository;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 /**
- * run the AHP algorithm
+ * Run the AHP algorithm
+ *
+ * <p>In that file the system get a survey, for each comparison data category make a matrix and run the AHP
+ * algorithm to generate the `CR` and the `weight` of each value.</p>
+ * <p>At the end of each data category we save the data into database for future used.</p>
+ * @author      John Nikolaou
  */
 @Service
 public class RunAHP {
@@ -44,7 +49,7 @@ public class RunAHP {
 		this.problemsUserAHPRepository = problemsUserAHPRepository;
 	}
 	/**
-	 * run the AHP algorithm
+	 * The system run the AHP algorithm for each user have complete the survey
 	 *
 	 * @param id the id of the survey
 	 */
@@ -56,13 +61,12 @@ public class RunAHP {
 
 				ProblemUserAhp problemUserAhp = new ProblemUserAhp();
 				problemUserAhp.setProblemUser(new ProblemUser(problemUser.getId(), problemUser.getUser()));
-				List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
 
-				criteriaAhp(problemUser, problemUserAhp, criteriaList);
+				criteriaAhp(problemUser, problemUserAhp);
 
-				factorsForCriteriaAhp(problemUser, problemUserAhp, criteriaList);
+				factorsForCriteriaAhp(problemUser, problemUserAhp);
 
-				alternativesForCriteriaAhp(problemUser, problemUserAhp, criteriaList);
+				alternativesForCriteriaAhp(problemUser, problemUserAhp);
 
 				alternativesForFactorsAhp(problemUser, problemUserAhp);
 			}
@@ -71,11 +75,15 @@ public class RunAHP {
 	}
 
 	/**
-	 * Run tha AHP algorithm and save the results for the alternatives of factors
+	 * Run tha AHP algorithm and save the results for the alternatives of factors.
+	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param problemUserAhp used to save the results of the algorithm to the database.
 	 */
 	private void alternativesForFactorsAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp) {
 		ArrayList<Factor> factorList = new ArrayList<>();
-		for (Criteria criteria : problemUser.getProblem().getCriteria()) {
+		List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
+		for (Criteria criteria : criteriaList) {
 			factorList.addAll(criteria.getFactor());
 		}
 		List<AlternativesFactorAnswerAhp> alternativesFactorAnswerAHPList = new ArrayList<>();
@@ -85,7 +93,7 @@ public class RunAHP {
 					+ factor.getName() + "  -----------------------------------");
 			List<Alternatives> alternativesList = problemUser.getProblem().getAlternatives();
 			if (alternativesList.size() > 0) {
-				double[][] matrix = getMatrixAlternativesForFactors(problemUser, factor, alternativesList);
+				double[][] matrix = getMatrixAlternativesForFactors(problemUser, factor.getId(), alternativesList);
 				AHP ahpDataAlternatives = runAHPeig(matrix);
 				for (int i = 0; i < alternativesList.size(); i++) {
 					alternativesFactorAnswerAHPList.add(new AlternativesFactorAnswerAhp(
@@ -103,17 +111,21 @@ public class RunAHP {
 
 	/**
 	 * Run tha AHP algorithm and save the results for the alternatives of criteria
+	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param problemUserAhp used to save the results of the algorithm to the database.
 	 */
-	private void alternativesForCriteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp, List<Criteria> criteriaList) {
+	private void alternativesForCriteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp) {
 		List<AlternativesCriteriaAnswerAhp> alternativesCriteriaAnswerAHPList = new ArrayList<>();
 		List<AlternativesCriteriaCrAhp> alternativesCriteriaCrAHPList = new ArrayList<>();
+		List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
 		for (Criteria criteria : criteriaList) {
 			if (criteria.getFactor().size() == 0) {
 				System.out.println("--------------------------------- Run Alternatives for Criteria: "
 						+ criteria.getName() + "  -----------------------------------");
 				List<Alternatives> alternativesList = problemUser.getProblem().getAlternatives();
 				if (alternativesList.size() > 0) {
-					double[][] matrix = getMatrixAlternativesForCriteria(problemUser, criteria, alternativesList);
+					double[][] matrix = getMatrixAlternativesForCriteria(problemUser, criteria.getId(), alternativesList);
 					AHP ahpDataAlternatives = runAHPeig(matrix);
 					for (int i = 0; i < alternativesList.size(); i++) {
 						alternativesCriteriaAnswerAHPList
@@ -133,15 +145,19 @@ public class RunAHP {
 
 	/**
 	 * Run tha AHP algorithm and save the results for the factors of criteria
+	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param problemUserAhp used to save the results of the algorithm to the database.
 	 */
-	private void factorsForCriteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp, List<Criteria> criteriaList) {
+	private void factorsForCriteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp) {
 		List<FactorAnswerAhp> factorAnswerAHPList = new ArrayList<>();
 		List<FactorCrAhp> factorCrAhpList = new ArrayList<>();
+		List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
 		for (Criteria criteria : criteriaList) {
 			if (criteria.getFactor().size() > 1) {
 				System.out.println("--------------------------------- Run Facto for Criteria: " + criteria.getName() + "  -----------------------------------");
 				List<Factor> factorList = criteria.getFactor();
-				double[][] matrix = getMatrixFactorForCriteria(problemUser, criteria, factorList);
+				double[][] matrix = getMatrixFactorForCriteria(problemUser, criteria.getId(), factorList);
 				AHP ahpDataFactor = runAHPeig(matrix);
 				for (int i = 0; i < factorList.size(); i++) {
 					factorAnswerAHPList.add(new FactorAnswerAhp(new Criteria(criteria.getId()),
@@ -158,9 +174,13 @@ public class RunAHP {
 
 	/**
 	 * Run tha AHP algorithm and save the results for the criteria
+	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param problemUserAhp used to save the results of the algorithm to the database.
 	 */
-	private void criteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp, List<Criteria> criteriaList) {
+	private void criteriaAhp(ProblemUser problemUser, ProblemUserAhp problemUserAhp ) {
 		System.out.println("--------------------------------- Run Criteria  -----------------------------------");
+		List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
 		if (criteriaList.size() > 0) {
 			double[][] matrix = getMatrixCriteria(problemUser, criteriaList);
 			AHP ahpDataCriteria = runAHPeig(matrix);
@@ -178,9 +198,13 @@ public class RunAHP {
 	/**
 	 * Generate the matrix which are necessary for tha AHP algorithm for the alternatives of factors
 	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param factorId the id of the factor we called to make the matrix.
+	 * @param alternativesList the list of the alternatives we make the matrix.
+	 *
 	 * @return the Matrix
 	 */
-	private double[][] getMatrixAlternativesForFactors(ProblemUser problemUser, Factor factor, List<Alternatives> alternativesList) {
+	private double[][] getMatrixAlternativesForFactors(ProblemUser problemUser, int factorId, List<Alternatives> alternativesList) {
 		double[][] matrix = new double[alternativesList.size()][alternativesList.size()];
 		for (int i = 0; i < alternativesList.size(); i++) {
 			for (int j = 0; j < alternativesList.size(); j++) {
@@ -193,7 +217,7 @@ public class RunAHP {
 									.getId() == alternativesList.get(iFinal).getId()
 									&& alternativesFactorTmp.getAlternativesLeft()
 											.getId() == alternativesList.get(jFinal).getId()
-									&& alternativesFactorTmp.getFactor().getId() == factor.getId())
+									&& alternativesFactorTmp.getFactor().getId() == factorId)
 							.findAny().orElse(null);
 					if (alternativesFactorAnswer != null)
 						matrix[i][j] = alternativesFactorAnswer.getWeight();
@@ -210,9 +234,13 @@ public class RunAHP {
 	/**
 	 * Generate the matrix which are necessary for tha AHP algorithm for the alternatives of criteria
 	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param criteriaId the id of the criteria we called to make the matrix.
+	 * @param alternativesList the list of the alternatives we make the matrix.
+	 *
 	 * @return the Matrix
 	 */
-	private double[][] getMatrixAlternativesForCriteria(ProblemUser problemUser, Criteria criteria, List<Alternatives> alternativesList) {
+	private double[][] getMatrixAlternativesForCriteria(ProblemUser problemUser, int criteriaId, List<Alternatives> alternativesList) {
 		double[][] matrix = new double[alternativesList.size()][alternativesList
 				.size()];
 		for (int i = 0; i < alternativesList.size(); i++) {
@@ -227,8 +255,7 @@ public class RunAHP {
 									.getId() == alternativesList.get(iFinal).getId()
 									&& alternativesCriteriaTmp.getAlternativesLeft()
 											.getId() == alternativesList.get(jFinal).getId()
-									&& alternativesCriteriaTmp.getCriteria().getId() == criteria
-											.getId())
+									&& alternativesCriteriaTmp.getCriteria().getId() == criteriaId)
 							.findAny().orElse(null);
 					if (alternativesCriteriaAnswer != null)
 						matrix[i][j] = alternativesCriteriaAnswer.getWeight();
@@ -245,9 +272,13 @@ public class RunAHP {
 	/**
 	 * Generate the matrix which are necessary for tha AHP algorithm for the factors of criteria
 	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param criteriaId the id of the criteria we called to make the matrix.
+	 * @param factorList the list of the factors we make the matrix.
+	 *
 	 * @return the Matrix
 	 */
-	private double[][] getMatrixFactorForCriteria(ProblemUser problemUser, Criteria criteria, List<Factor> factorList) {
+	private double[][] getMatrixFactorForCriteria(ProblemUser problemUser, int criteriaId, List<Factor> factorList) {
 		double[][] matrix = new double[factorList.size()][factorList.size()];
 		for (int i = 0; i < factorList.size(); i++) {
 			for (int j = 0; j < factorList.size(); j++) {
@@ -259,7 +290,7 @@ public class RunAHP {
 									.getId() == factorList.get(iFinal).getId()
 									&& factorAnswerTmp.getFactorLeft().getId() == factorList.get(jFinal)
 											.getId()
-									&& factorAnswerTmp.getCriteria().getId() == criteria.getId())
+									&& factorAnswerTmp.getCriteria().getId() == criteriaId)
 							.findAny().orElse(null);
 					if (factorAnswer != null)
 						matrix[i][j] = factorAnswer.getWeight();
@@ -274,6 +305,9 @@ public class RunAHP {
 
 	/**
 	 * Generate the matrix which are necessary for tha AHP algorithm for the criteria
+	 *
+	 * @param problemUser have the data from the answers of a simple user.
+	 * @param criteriaList the list of the criteria we make the matrix.
 	 *
 	 * @return the Matrix
 	 */
@@ -302,7 +336,8 @@ public class RunAHP {
 	}
 
 	/**
-	 * run the AHP algorithm
+	 * That function get a matrix of data and execute the AHP algorithm to produce
+	 * the results of the answers.
 	 *
 	 * @return AHP the results of the answers
 	 */

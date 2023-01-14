@@ -31,7 +31,8 @@ import com.hua.model.ProblemUser;
 import com.hua.model.ProblemUserAhp;
 import com.hua.repository.ProblemsUserAhpRepository;
 /**
- * generate the Excel with the survey answers
+ * In that class, the system generates an Excel with all the answers
+ * of the users which complete the assigned survey
  */
 @Service
 public class GenerateDataExcel {
@@ -43,7 +44,11 @@ public class GenerateDataExcel {
 	}
 
 	/**
-	 * Make the Excel file and start to insert the answers
+	 * That function create an Excel file into memory and start the
+	 * process to insert the data of the users.
+	 *
+	 * @param id of the survey which we want to extract tha data
+	 * @return the Excel file
 	 */
 	public ResponseEntity<InputStreamResource> makeExcel(int id) {
 		Optional<List<ProblemUserAhp>> ProblemUserAhpListOpt = problemsUserAHPRepository.findAllByProblemUserProblemId(id);
@@ -77,13 +82,16 @@ public class GenerateDataExcel {
 
 	/**
 	 * Insert the answers of users for each category of data
+	 *
+	 * @param problemUserAhp
+	 * @param sheet the Excel sheet object
 	 */
 	private void makeExcelPerUser(ProblemUserAhp problemUserAhp, Sheet sheet) {
 		int rowCounter=0;
 		
 		ProblemUser problemUser = problemUserAhp.getProblemUser();
 		List<Criteria> criteriaList = problemUser.getProblem().getCriteria();
-		Row headerBottom = sheet.createRow(rowCounter);
+		sheet.createRow(rowCounter);
 		rowCounter = addCriteriaData(problemUserAhp, sheet, rowCounter, problemUser, criteriaList);
 
 		rowCounter = addFactorForCriteriaData(problemUserAhp, sheet, rowCounter, problemUser, criteriaList);
@@ -95,6 +103,11 @@ public class GenerateDataExcel {
 	}
 	/**
 	 * Insert the answers of users for alternative of factor
+	 *
+	 * @param problemUserAhp
+	 * @param sheet the Excel sheet object
+	 * @param rowCounter the row in the Excel sheet
+	 * @param problemUser the problem of the user
 	 */
 	private static void addAlternativeForFactorData(ProblemUserAhp problemUserAhp, Sheet sheet, int rowCounter, ProblemUser problemUser) {
 		Row headerBottom;
@@ -146,6 +159,12 @@ public class GenerateDataExcel {
 
 	/**
 	 * Insert the answers of users for alternative of criteria
+	 *
+	 * @param problemUserAhp
+	 * @param sheet the Excel sheet object
+	 * @param rowCounter the row in the Excel sheet
+	 * @param problemUser the problem of the user
+	 * @param criteriaList the list of criteria
 	 */
 	private static int addAlternativeForCriteriaData(ProblemUserAhp problemUserAhp, Sheet sheet, int rowCounter, ProblemUser problemUser, List<Criteria> criteriaList) {
 		Row headerBottom;
@@ -196,6 +215,12 @@ public class GenerateDataExcel {
 
 	/**
 	 * Insert the answers of users for Factor of criteria
+	 *
+	 * @param problemUserAhp
+	 * @param sheet the Excel sheet object
+	 * @param rowCounter the row in the Excel sheet
+	 * @param problemUser the problem of the user
+	 * @param criteriaList the list of criteria
 	 */
 	private static int addFactorForCriteriaData(ProblemUserAhp problemUserAhp, Sheet sheet, int rowCounter, ProblemUser problemUser, List<Criteria> criteriaList) {
 		Row headerBottom;
@@ -243,6 +268,12 @@ public class GenerateDataExcel {
 
 	/**
 	 * Insert the answers of users for criteria
+	 *
+	 * @param problemUserAhp
+	 * @param sheet the Excel sheet object
+	 * @param rowCounter the row in the Excel sheet
+	 * @param problemUser the problem of the user
+	 * @param criteriaList the list of criteria
 	 */
 	private static int addCriteriaData(ProblemUserAhp problemUserAhp, Sheet sheet, int rowCounter, ProblemUser problemUser, List<Criteria> criteriaList) {
 		Row headerBottom;

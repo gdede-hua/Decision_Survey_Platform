@@ -14,6 +14,7 @@ import com.hua.repository.MenuRepository;
 import com.hua.repository.UsersRepository;
 /**
  * On first start up save the menu into database
+ * @author      John Nikolaou
  */
 @Component
 public class DatabaseLoader implements CommandLineRunner {
@@ -35,7 +36,12 @@ public class DatabaseLoader implements CommandLineRunner {
 		this.menuRepository = menuRepository;
 		this.userRepository = userRepository;
 	}
-	
+
+	/**
+	 * In the first start-up of the project we insert the data for the menu with that function in our data base.
+	 * @param strings incoming main method arguments
+	 * @throws Exception
+	 */
 	@Override
 	public void run(String... strings) throws Exception {
 		
